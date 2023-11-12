@@ -60,10 +60,10 @@ public class BulletBase : MonoBehaviour
                 // rotate the bullet to face the direction it is moving
                 transform.rotation = Quaternion.LookRotation(vel);
             }
-            //else
-            //{
-            //    Destroy(gameObject);
-            //}
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
