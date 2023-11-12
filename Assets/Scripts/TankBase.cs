@@ -79,6 +79,9 @@ public class Tank : MonoBehaviour
     // Makes the cannon always point at the mouse
     private void CannonTracer()
     {
+        // Set up a layer mask to include only the floor layer
+        int floorLayerMask = 1 << LayerMask.NameToLayer("Floor");
+
         // Create a ray from the mouse cursor on screen in the direction of the camera
         Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -86,7 +89,7 @@ public class Tank : MonoBehaviour
         RaycastHit floorHit;
 
         // Perform the raycast and if it hits something on the floor layer...
-        if (Physics.Raycast(camRay, out floorHit, 100f))
+        if (Physics.Raycast(camRay, out floorHit, 100f, floorLayerMask))
         {
             // Create a vector from the player to the point on the floor the raycast from the mouse hit
             Vector3 playerToMouse = floorHit.point - cannon.position;
