@@ -11,11 +11,12 @@ GameObject:
   - component: {fileID: 7827871620249203954}
   - component: {fileID: 1838730368228998255}
   - component: {fileID: 6458956928857410553}
-  - component: {fileID: 3385038679644283722}
-  - component: {fileID: 6652520603502845838}
+  - component: {fileID: 3111448587788101252}
+  - component: {fileID: -1436442432698554771}
+  - component: {fileID: -5891173054548963063}
   m_Layer: 0
   m_Name: shell
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,7 +86,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &3385038679644283722
+--- !u!114 &3111448587788101252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3466702080525196982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ba509b5082e4149b7ac87d3011ac99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  ricochetMax: 0
+  parentTank: {fileID: 0}
+--- !u!54 &-1436442432698554771
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,10 +126,10 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &6652520603502845838
-BoxCollider:
+  m_Constraints: 4
+  m_CollisionDetection: 2
+--- !u!136 &-5891173054548963063
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -127,9 +143,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4.24, y: 4.24, z: 8}
+  serializedVersion: 2
+  m_Radius: 4
+  m_Height: 4.24
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

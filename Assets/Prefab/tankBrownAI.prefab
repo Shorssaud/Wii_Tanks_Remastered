@@ -192,9 +192,9 @@ GameObject:
   - component: {fileID: 7332873459600628459}
   - component: {fileID: 4078510834722439584}
   - component: {fileID: 4437538428436685358}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: tankBrownAI
-  m_TagString: Untagged
+  m_TagString: AI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

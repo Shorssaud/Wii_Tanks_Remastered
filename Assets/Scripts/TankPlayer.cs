@@ -8,9 +8,10 @@ public class TankPlayer : Tank
     // Start is called before the first frame update
     void Start()
     {
-        maxSpeed = 5f;
+        maxSpeed = 10f;
         rotSpeed = 270f;
         bulletSpeed = 10f;
+        bulletRicochetMax = 2;
     }
 
     // Update is called once per frame

@@ -7,6 +7,7 @@ public class Tank : MonoBehaviour
     public float maxSpeed;
     public float rotSpeed;
     public float bulletSpeed;
+    public int bulletRicochetMax;
 
     private Vector3 vel = Vector3.zero;
     private Vector3 rot = Vector3.zero;
@@ -24,6 +25,8 @@ public class Tank : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
     // Sets the movement vector based on the interger provided
+    // horizontal = -1 is left, 1 is right, 0 is no horizontal movement
+    // vertical = -1 is down, 1 is up, 0 is no vertical movement
     protected void Move(float horizontal, float vertical)
     {
         // If there is no input on the horizontal or vertical axis set the velocity to 0
@@ -56,16 +59,21 @@ public class Tank : MonoBehaviour
     }
 
     // Shoots a bullet
+    // TODO change this to accomodate different bullet types
     protected void Shoot()
     {
-        // Instantiate the projectile at the position and rotation of this transform
+        // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
-        // Add velocity to the bullet
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
+        // Apply the tanks bullet settings
+        bullet.GetComponent<BulletBase>().speed = bulletSpeed;
+        bullet.GetComponent<BulletBase>().ricochetMax = bulletRicochetMax;
 
-        // Destroy the bullet after 2 seconds
-        Destroy(bullet, 2.0f);
+        //set the parent tank
+        bullet.GetComponent<BulletBase>().parentTank = gameObject;
+
+        // Destroy the bullet after 5 seconds
+        Destroy(bullet, 5.0f);
     }
 
     // Makes the cannon always point at the mouse
