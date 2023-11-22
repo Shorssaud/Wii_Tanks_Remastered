@@ -12,6 +12,8 @@ public class TankPlayer : Tank
         rotSpeed = 270f;
         bulletSpeed = 10f;
         bulletRicochetMax = 2;
+        maxBullets = 5;
+        fireRate = 0.3f;
     }
 
     // Update is called once per frame

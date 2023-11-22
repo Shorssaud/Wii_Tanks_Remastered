@@ -8,9 +8,12 @@ public class Tank : MonoBehaviour
     public float rotSpeed;
     public float bulletSpeed;
     public int bulletRicochetMax;
+    public int currentBullets;
+    public int maxBullets;
+    public float fireRate;
+    public float nextFire;
 
     private Vector3 vel = Vector3.zero;
-    private Vector3 rot = Vector3.zero;
     private Quaternion targetRotation;
 
     public Rigidbody rb;
@@ -23,6 +26,8 @@ public class Tank : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        nextFire = 0;
+        currentBullets = 0;
     }
     // Sets the movement vector based on the interger provided
     // horizontal = -1 is left, 1 is right, 0 is no horizontal movement
@@ -62,6 +67,8 @@ public class Tank : MonoBehaviour
     // TODO change this to accomodate different bullet types
     protected void Shoot()
     {
+        if (nextFire > 0 || currentBullets >= maxBullets)
+            return;
         // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
@@ -72,8 +79,8 @@ public class Tank : MonoBehaviour
         //set the parent tank
         bullet.GetComponent<BulletBase>().parentTank = gameObject;
 
-        // Destroy the bullet after 5 seconds
-        Destroy(bullet, 5.0f);
+        // reset firing timer
+        nextFire = fireRate;
     }
 
     // Makes the cannon always point at the mouse
@@ -118,10 +125,13 @@ public class Tank : MonoBehaviour
         rb.velocity = vel;
         // if the current rotation is not the target rotation set velocity to 0
         if (rb.rotation != targetRotation)
+        {
             rb.velocity = Vector3.zero;
+        }
         // Set the rotation of the rigidbody to the target rotation
         rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotSpeed * Time.deltaTime);
         // Make the cannon always point at the mouse
         CannonTracer();
+        nextFire -= Time.deltaTime;
     }
 }

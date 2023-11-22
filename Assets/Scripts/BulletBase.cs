@@ -18,6 +18,7 @@ public class BulletBase : MonoBehaviour
         vel = transform.forward;
         //ignore collisions with parentTank
         Physics.IgnoreCollision(GetComponent<Collider>(), parentTank.GetComponent<Collider>());
+        parentTank.GetComponent<Tank>().currentBullets++;
     }
 
     // Update is called once per frame
@@ -31,16 +32,18 @@ public class BulletBase : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // if it collides with a tank, destroy the bullet and the tank unless it is the tank that fired the bullet
-        if ((collision.gameObject.tag == "AI" || collision.gameObject.tag == "Player") && collision.gameObject.tag != parentTank.tag)
+        if (collision.gameObject.tag == "AI" || collision.gameObject.tag == "Player")
         {
             Destroy(gameObject);
             Destroy(collision.gameObject);
+            parentTank.GetComponent<Tank>().currentBullets--;
         }
         // if the bullet collides with a bullet, destroy both bullets
         if (collision.gameObject.tag == "Bullet")
         {
             Destroy(gameObject);
             Destroy(collision.gameObject);
+            parentTank.GetComponent<Tank>().currentBullets--;
         }
         // If the bullet collides with a wall, destroy the bullet or ricochet
         if (collision.gameObject.tag == "Wall")
@@ -63,6 +66,7 @@ public class BulletBase : MonoBehaviour
             else
             {
                 Destroy(gameObject);
+                parentTank.GetComponent<Tank>().currentBullets--;
             }
         }
     }

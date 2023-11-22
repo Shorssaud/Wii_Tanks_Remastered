@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 551568467825302385}
   - component: {fileID: 3529774830483746932}
-  - component: {fileID: 6880987065417825513}
   - component: {fileID: 5769084969283705170}
+  - component: {fileID: 8731653441577723056}
+  - component: {fileID: 3839360598852473994}
   m_Layer: 0
   m_Name: tankPlayer
   m_TagString: Player
@@ -33,7 +34,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1446936966336696161}
-  - {fileID: 931491154949140115}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3529774830483746932
@@ -58,32 +58,11 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &6880987065417825513
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3456261370082138227}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 20.243622, y: 16.149378, z: 31.410973}
-  m_Center: {x: -0.22480328, y: 7.574685, z: 4.2024007}
+  m_Constraints: 36
+  m_CollisionDetection: 2
 --- !u!114 &5769084969283705170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,49 +78,44 @@ MonoBehaviour:
   maxSpeed: 0
   rotSpeed: 0
   bulletSpeed: 0
+  bulletRicochetMax: 0
+  currentBullets: 0
+  maxBullets: 0
+  fireRate: 0
+  nextFire: 0
   rb: {fileID: 3529774830483746932}
   bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}
   bulletSpawn: {fileID: 7691933805998952969}
   cannon: {fileID: 2587633769557771887}
---- !u!1 &4437951642780641944
-GameObject:
+--- !u!64 &8731653441577723056
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 931491154949140115}
-  - component: {fileID: 2384687453498178507}
-  m_Layer: 0
-  m_Name: polygon1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &931491154949140115
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4437951642780641944}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 551568467825302385}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!137 &2384687453498178507
+  m_GameObject: {fileID: 3456261370082138227}
+  m_Material: {fileID: 13400000, guid: 26ea14fc38a31a046818b75333981656, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8399849596566480289, guid: 564c565fad448dd40818f99f42d02921, type: 3}
+--- !u!137 &3839360598852473994
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4437951642780641944}
+  m_GameObject: {fileID: 3456261370082138227}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -247,7 +221,7 @@ Transform:
   m_GameObject: {fileID: 6937707033275008669}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.29999924, y: 0, z: 23.1}
+  m_LocalPosition: {x: 0.29999924, y: 0, z: 24.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
