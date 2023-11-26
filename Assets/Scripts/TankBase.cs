@@ -32,6 +32,7 @@ public class Tank : MonoBehaviour
     // Sets the movement vector based on the interger provided
     // horizontal = -1 is left, 1 is right, 0 is no horizontal movement
     // vertical = -1 is down, 1 is up, 0 is no vertical movement
+    // the horizontal and vertical are flipped and modified because of the camera angle
     protected void Move(float vertical, float horizontal)
     {
         // If there is no input on the horizontal or vertical axis set the velocity to 0
