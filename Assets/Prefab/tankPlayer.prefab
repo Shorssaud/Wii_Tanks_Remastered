@@ -83,6 +83,7 @@ MonoBehaviour:
   maxBullets: 0
   fireRate: 0
   nextFire: 0
+  explosionPrefab: {fileID: 1000012903210382, guid: fdc7727355b657843a3323f7c169535e, type: 3}
   rb: {fileID: 3529774830483746932}
   bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}
   bulletSpawn: {fileID: 7691933805998952969}

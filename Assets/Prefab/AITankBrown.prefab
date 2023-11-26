@@ -76,6 +76,7 @@ GameObject:
   - component: {fileID: 441417158360075819}
   - component: {fileID: 6171068732221415080}
   - component: {fileID: 6670298966495623452}
+  - component: {fileID: 3031989586923180462}
   m_Layer: 0
   m_Name: AITankBrown
   m_TagString: AI
@@ -91,7 +92,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3434008483057092561}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.04526172, z: -0, w: -0.9989752}
+  m_LocalRotation: {x: 0, y: 0.045258317, z: -0, w: -0.99897534}
   m_LocalPosition: {x: -0.024443194, y: 0.27999997, z: -13.2555275}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
@@ -225,6 +226,31 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &3031989586923180462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3434008483057092561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8942cd1701000408b7740503ad98e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 0
+  rotSpeed: 0
+  bulletSpeed: 0
+  bulletRicochetMax: 0
+  currentBullets: 0
+  maxBullets: 0
+  fireRate: 0
+  nextFire: 0
+  explosionPrefab: {fileID: 1000012903210382, guid: 43d8eeeb8f8a3d74bb23a01a2adc4f80, type: 3}
+  rb: {fileID: 2175619590807515941}
+  bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}
+  bulletSpawn: {fileID: 2545442907691268288}
+  cannon: {fileID: 7498940210823476087}
 --- !u!1 &8313792355909824392
 GameObject:
   m_ObjectHideFlags: 0
