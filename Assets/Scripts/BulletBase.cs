@@ -17,7 +17,7 @@ public class BulletBase : MonoBehaviour
     {
         vel = transform.forward;
         //ignore collisions with parentTank
-        Physics.IgnoreCollision(GetComponent<Collider>(), parentTank.GetComponent<Collider>());
+        //Physics.IgnoreCollision(GetComponent<Collider>(), parentTank.GetComponent<Collider>());
         parentTank.GetComponent<Tank>().currentBullets++;
     }
 
@@ -35,9 +35,11 @@ public class BulletBase : MonoBehaviour
         if (collision.gameObject.tag == "AI" || collision.gameObject.tag == "Player")
         {
             Destroy(gameObject);
-            Destroy(collision.gameObject);
+            float explosionSize = 3.0f;
+            collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
             parentTank.GetComponent<Tank>().currentBullets--;
         }
+
         // if the bullet collides with a bullet, destroy both bullets
         if (collision.gameObject.tag == "Bullet")
         {

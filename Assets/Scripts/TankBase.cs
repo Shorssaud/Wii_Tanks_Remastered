@@ -13,6 +13,8 @@ public class Tank : MonoBehaviour
     public float fireRate;
     public float nextFire;
 
+    public GameObject explosionPrefab; 
+
     private Vector3 vel = Vector3.zero;
     private Quaternion targetRotation;
 
@@ -136,5 +138,15 @@ public class Tank : MonoBehaviour
         // Make the cannon always point at the mouse
         CannonTracer();
         nextFire -= Time.deltaTime;
+    }
+
+    public void DestroyTank(float explosionSize = 1.0f)
+    {
+        if (explosionPrefab != null)
+        {
+            GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            explosion.transform.localScale *= explosionSize; // Scale the explosion effect
+        }
+        Destroy(gameObject);
     }
 }
