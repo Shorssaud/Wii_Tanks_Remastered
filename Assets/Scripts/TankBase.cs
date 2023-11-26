@@ -32,7 +32,7 @@ public class Tank : MonoBehaviour
     // Sets the movement vector based on the interger provided
     // horizontal = -1 is left, 1 is right, 0 is no horizontal movement
     // vertical = -1 is down, 1 is up, 0 is no vertical movement
-    protected void Move(float horizontal, float vertical)
+    protected void Move(float vertical, float horizontal)
     {
         // If there is no input on the horizontal or vertical axis set the velocity to 0
         if (horizontal == 0 && vertical == 0)
@@ -40,6 +40,8 @@ public class Tank : MonoBehaviour
             vel = Vector3.zero;
             return;
         }
+        vertical = vertical * (-1);
+
         // Calculate the angle in radians using Mathf.Atan2
         float angle = Mathf.Atan2(horizontal, vertical);
 
@@ -96,7 +98,7 @@ public class Tank : MonoBehaviour
         RaycastHit floorHit;
 
         // Perform the raycast and if it hits something on the floor layer...
-        if (Physics.Raycast(camRay, out floorHit, 100f, floorLayerMask))
+        if (Physics.Raycast(camRay, out floorHit, 1000f, floorLayerMask))
         {
             // Create a vector from the player to the point on the floor the raycast from the mouse hit
             Vector3 playerToMouse = floorHit.point - cannon.position;
