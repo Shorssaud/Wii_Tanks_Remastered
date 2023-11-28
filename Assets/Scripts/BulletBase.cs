@@ -10,6 +10,7 @@ public class BulletBase : MonoBehaviour
     private Vector3 vel;
 
     public GameObject explosionParticlePrefab;
+    public GameObject ricochetParticlePrefab;
 
     // store the parent tank
     public GameObject parentTank;
@@ -60,6 +61,10 @@ public class BulletBase : MonoBehaviour
         {
             if (ricochetCount < ricochetMax)
             {
+                if (ricochetParticlePrefab != null)
+                {
+                    Instantiate(ricochetParticlePrefab, transform.position, Quaternion.identity);
+                }
                 print("Bullet collided with " + collision.gameObject.tag);
                 // Calculate the reflection direction using Unity's physics engine
                 Vector3 reflection = Vector3.Reflect(vel.normalized, collision.contacts[0].normal);
@@ -75,6 +80,11 @@ public class BulletBase : MonoBehaviour
             }
             else
             {
+                // Instantiate explosion at the point of collision
+                if (explosionParticlePrefab != null)
+                {
+                    Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
+                }
                 Destroy(gameObject);
                 parentTank.GetComponent<Tank>().currentBullets--;
             }
