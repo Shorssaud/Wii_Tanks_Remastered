@@ -9,6 +9,8 @@ public class BulletBase : MonoBehaviour
     public int ricochetMax = 1;
     private Vector3 vel;
 
+    public GameObject explosionParticlePrefab;
+
     // store the parent tank
     public GameObject parentTank;
 
@@ -43,6 +45,12 @@ public class BulletBase : MonoBehaviour
         // if the bullet collides with a bullet, destroy both bullets
         if (collision.gameObject.tag == "Bullet")
         {
+            // Instantiate explosion at the point of collision
+            if (explosionParticlePrefab != null)
+            {
+                Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
+            }
+
             Destroy(gameObject);
             Destroy(collision.gameObject);
             parentTank.GetComponent<Tank>().currentBullets--;
