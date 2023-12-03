@@ -13,7 +13,7 @@ public class Tank : MonoBehaviour
     public float fireRate;
     public float nextFire;
 
-    public GameObject explosionPrefab; 
+    public GameObject explosionPrefab;
 
     private Vector3 vel = Vector3.zero;
     private Quaternion targetRotation;
@@ -23,6 +23,7 @@ public class Tank : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
     public Transform cannon;
+    public Transform tankBase;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,18 @@ public class Tank : MonoBehaviour
         nextFire = 0;
         currentBullets = 0;
     }
+
+    protected void RotateBase(float angleDegrees)
+    {
+        // Target Y-axis rotation only
+        Quaternion baseTargetRotation = Quaternion.Euler(0f, angleDegrees, 0f);
+        // Apply the rotation only on the Y axis
+        tankBase.rotation = Quaternion.Euler(tankBase.rotation.eulerAngles.x,
+                                             Quaternion.RotateTowards(tankBase.rotation, baseTargetRotation, rotSpeed * Time.deltaTime).eulerAngles.y,
+                                             tankBase.rotation.eulerAngles.z);
+    }
+
+
     // Sets the movement vector based on the interger provided
     // horizontal = -1 is left, 1 is right, 0 is no horizontal movement
     // vertical = -1 is down, 1 is up, 0 is no vertical movement
@@ -50,6 +63,7 @@ public class Tank : MonoBehaviour
 
         // Convert the angle to degrees
         float angleDegrees = angle * Mathf.Rad2Deg;
+        RotateBase(angleDegrees);
 
         // Create a direction vector based on the angle
         Vector3 moveDirection = new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle));
@@ -88,55 +102,14 @@ public class Tank : MonoBehaviour
         nextFire = fireRate;
     }
 
-    // Makes the cannon always point at the mouse
-    private void CannonTracer()
-    {
-        // Set up a layer mask to include only the floor layer
-        int floorLayerMask = 1 << LayerMask.NameToLayer("Floor");
 
-        // Create a ray from the mouse cursor on screen in the direction of the camera
-        Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        // Create a RaycastHit variable to store information about what was hit by the ray
-        RaycastHit floorHit;
-
-        // Perform the raycast and if it hits something on the floor layer...
-        if (Physics.Raycast(camRay, out floorHit, 1000f, floorLayerMask))
-        {
-            // Create a vector from the player to the point on the floor the raycast from the mouse hit
-            Vector3 playerToMouse = floorHit.point - cannon.position;
-
-            // Ensure the vector is entirely along the floor plane
-            playerToMouse.y = 0f;
-
-            // Create a quaternion (rotation) based on looking down the vector from the player to the mouse
-            Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-
-            // Extract the y-axis rotation from the newRotation quaternion
-            float yRotation = newRotation.eulerAngles.y;
-
-            // Create a new quaternion with only the y-axis rotation
-            Quaternion newYRotation = Quaternion.Euler(0f, yRotation, 270f);
-
-            // Set the player's rotation to this new rotation
-            cannon.rotation = newYRotation;
-        }
-    }
 
     // TankUpdate is called once per frame
     protected void TankUpdate()
     {
         // Set the velocity of the rigidbody to the movement vector
         rb.velocity = vel;
-        // if the current rotation is not the target rotation set velocity to 0
-        if (rb.rotation != targetRotation)
-        {
-            rb.velocity = Vector3.zero;
-        }
-        // Set the rotation of the rigidbody to the target rotation
-        rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotSpeed * Time.deltaTime);
-        // Make the cannon always point at the mouse
-        CannonTracer();
+
         nextFire -= Time.deltaTime;
     }
 
