@@ -28,7 +28,6 @@ public class TankPlayer : Tank
         }
         
         Move(horizontal, vertical);
-        TankUpdate();
         // Make the cannon always point at the mouse
         CannonTracer();
     }

@@ -45,7 +45,15 @@ public class TankAIAsh : Tank
             NavMeshHit hit;
             NavMesh.SamplePosition(randomDirection, out hit, 10f, NavMesh.AllAreas);
 
-            agent.SetDestination(hit.position);
+            // get the direction in vertical and horizontal input value
+            float horizontal = (hit.position.x - transform.position.x) / 10f;
+            float vertical = (hit.position.z - transform.position.z) / 10f;
+            // round this to 1, 0, or -1
+            horizontal = Mathf.Round(horizontal);
+            vertical = Mathf.Round(vertical);
+
+            print("horizontal: " + horizontal + " vertical: " + vertical);
+            Move(horizontal, vertical);
 
             stationaryTime = Time.time;
         }

@@ -54,6 +54,7 @@ public class Tank : MonoBehaviour
         if (horizontal == 0 && vertical == 0)
         {
             vel = Vector3.zero;
+            rb.velocity = vel;
             return;
         }
         vertical = vertical * (-1);
@@ -63,7 +64,6 @@ public class Tank : MonoBehaviour
 
         // Convert the angle to degrees
         float angleDegrees = angle * Mathf.Rad2Deg;
-        RotateBase(angleDegrees);
 
         // Create a direction vector based on the angle
         Vector3 moveDirection = new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle));
@@ -80,6 +80,13 @@ public class Tank : MonoBehaviour
             // Calculate the target rotation based on the angle
             targetRotation = Quaternion.Euler(0f, angleDegrees + 180, 0f);
         }
+        if (rb.rotation != targetRotation)
+        {
+            rb.velocity = Vector3.zero;
+        }
+        // Set the rotation of the rigidbody to the target rotation
+        rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotSpeed * Time.deltaTime);
+        rb.velocity = vel;
     }
 
     // Shoots a bullet
@@ -100,17 +107,6 @@ public class Tank : MonoBehaviour
 
         // reset firing timer
         nextFire = fireRate;
-    }
-
-
-
-    // TankUpdate is called once per frame
-    protected void TankUpdate()
-    {
-        // Set the velocity of the rigidbody to the movement vector
-        rb.velocity = vel;
-
-        nextFire -= Time.deltaTime;
     }
 
     public void DestroyTank(float explosionSize = 1.0f)
