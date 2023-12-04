@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class TankPlayer : Tank
 {
-    
+    private Transform cannon;
+    private Transform bulletSpawn;
     // Start is called before the first frame update
     void Start()
     {
-        maxSpeed = 10f;
-        rotSpeed = 270f;
-        bulletSpeed = 10f;
-        bulletRicochetMax = 2;
-        maxBullets = 5;
-        fireRate = 0.3f;
+        cannon = transform.Find("cannon");
+        bulletSpawn = cannon.Find("bulletSpawn");
     }
 
     // Update is called once per frame
@@ -24,12 +21,13 @@ public class TankPlayer : Tank
         float vertical = Input.GetAxis("Vertical");
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Shoot();
+            Shoot(bulletSpawn);
         }
         
         Move(horizontal, vertical);
         // Make the cannon always point at the mouse
         CannonTracer();
+        nextFire -= Time.deltaTime; // Decrement the nextFire timer
     }
 
         // Makes the cannon always point at the mouse

@@ -11,56 +11,39 @@ public class Tank : MonoBehaviour
     public int currentBullets;
     public int maxBullets;
     public float fireRate;
-    public float nextFire;
+    protected float nextFire;
 
     public GameObject explosionPrefab;
 
     private Vector3 vel = Vector3.zero;
     private Quaternion targetRotation;
 
-    public Rigidbody rb;
-
     public GameObject bulletPrefab;
-    public Transform bulletSpawn;
-    public Transform cannon;
-    public Transform tankBase;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         nextFire = 0;
         currentBullets = 0;
     }
 
-    protected void RotateBase(float angleDegrees)
-    {
-        // Target Y-axis rotation only
-        Quaternion baseTargetRotation = Quaternion.Euler(0f, angleDegrees, 0f);
-        // Apply the rotation only on the Y axis
-        tankBase.rotation = Quaternion.Euler(tankBase.rotation.eulerAngles.x,
-                                             Quaternion.RotateTowards(tankBase.rotation, baseTargetRotation, rotSpeed * Time.deltaTime).eulerAngles.y,
-                                             tankBase.rotation.eulerAngles.z);
-    }
-
-
     // Sets the movement vector based on the interger provided
     // horizontal = -1 is left, 1 is right, 0 is no horizontal movement
     // vertical = -1 is down, 1 is up, 0 is no vertical movement
-    // the horizontal and vertical are flipped and modified because of the camera angle
-    protected void Move(float vertical, float horizontal)
+    // the horizontal is flipped and modified because of the camera angle
+    protected void Move(float horizontal, float vertical)
     {
         // If there is no input on the horizontal or vertical axis set the velocity to 0
         if (horizontal == 0 && vertical == 0)
         {
             vel = Vector3.zero;
-            rb.velocity = vel;
             return;
         }
-        vertical = vertical * (-1);
+        horizontal = horizontal * (-1);
 
         // Calculate the angle in radians using Mathf.Atan2
-        float angle = Mathf.Atan2(horizontal, vertical);
+        float angle = Mathf.Atan2(vertical, horizontal);
 
         // Convert the angle to degrees
         float angleDegrees = angle * Mathf.Rad2Deg;
@@ -73,28 +56,77 @@ public class Tank : MonoBehaviour
 
         // Calculate the target rotation based on the angle
         targetRotation = Quaternion.Euler(0f, angleDegrees, 0f);
-
         // if the target rotation is more than 90 degrees from the current rotation rotate the rear instead
-        if (Mathf.Abs(Quaternion.Angle(rb.rotation, targetRotation)) > 90)
+        if (transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y > 90 || transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y < -90)
         {
             // Calculate the target rotation based on the angle
             targetRotation = Quaternion.Euler(0f, angleDegrees + 180, 0f);
         }
-        if (rb.rotation != targetRotation)
+        if (transform.rotation != targetRotation)
         {
-            rb.velocity = Vector3.zero;
+            vel = Vector3.zero;
         }
         // Set the rotation of the rigidbody to the target rotation
-        rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotSpeed * Time.deltaTime);
-        rb.velocity = vel;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
+
+        //Checking for wall collisions
+        //calculate the tanks future position after moving
+        Vector3 futurePosition = transform.position + vel * Time.deltaTime;
+        // Get the tank's collider to measure its size
+        Collider tankCollider = GetComponent<BoxCollider>();
+
+        // Define the layer mask for the "Default" layer (replace "Default" with your wall layer name)
+        LayerMask defaultLayerMask = LayerMask.GetMask("Default");
+
+        // Ignore collisions between the tank's collider and itself
+        Physics.IgnoreCollision(tankCollider, tankCollider);
+
+        // Perform a check to see if the tank would collide with any object in default layer at the future position
+        if (Physics.CheckBox(futurePosition, tankCollider.bounds.extents, transform.rotation, defaultLayerMask) && vel != Vector3.zero)
+        {
+            // Get all colliders overlapping the CheckBox
+            Collider[] colliders = Physics.OverlapBox(futurePosition, tankCollider.bounds.extents, transform.rotation, defaultLayerMask);
+
+            // Iterate through the colliders to check if any have the tank's own tag
+            foreach (Collider collider in colliders)
+            {
+                if (collider.gameObject == gameObject)
+                {
+                    // Ignore collisions with objects having the same tag as the tank
+                    Physics.IgnoreCollision(tankCollider, collider, true);
+                }
+                else
+                {
+                    // If the collider does not have the tank's tag and there's a collision, set the velocity to zero
+                    vel = Vector3.zero;
+                }
+            }
+        }
+
+
+        // Move the tank while avoiding wall collisions
+        transform.position += vel * Time.deltaTime;
     }
 
-    // Shoots a bullet
-    // TODO change this to accomodate different bullet types
-    protected void Shoot()
+    // Shoots a basic bullet
+    virtual protected void Shoot(Transform bulletSpawn)
     {
         if (nextFire > 0 || currentBullets >= maxBullets)
             return;
+        // If bulletSpawn is in a wall, don't shoot
+        if (Physics.CheckBox(bulletSpawn.position, bulletSpawn.localScale / 2, bulletSpawn.rotation, LayerMask.GetMask("Default")))
+        {
+            // check the collisions and only shoot if the bulletSpawn is not in a object tagged "Wall"
+            Collider[] colliders = Physics.OverlapBox(bulletSpawn.position, bulletSpawn.localScale / 2, bulletSpawn.rotation, LayerMask.GetMask("Default"));
+            foreach (Collider collider in colliders)
+            {
+                if (collider.gameObject.tag == "Wall")
+                {
+                    return;
+                }
+            }
+        }
+        currentBullets++;
         // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
@@ -109,7 +141,12 @@ public class Tank : MonoBehaviour
         nextFire = fireRate;
     }
 
-    public void DestroyTank(float explosionSize = 1.0f)
+    public void RemoveBullet()
+    {
+        currentBullets -= 1;
+    }
+
+    virtual public void DestroyTank(float explosionSize = 1.0f)
     {
         if (explosionPrefab != null)
         {

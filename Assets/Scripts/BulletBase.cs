@@ -5,7 +5,7 @@ using UnityEngine;
 public class BulletBase : MonoBehaviour
 {
     public float speed;
-    private int ricochetCount = 0;
+    public int ricochetCount = 0;
     public int ricochetMax = 1;
     private Vector3 vel;
 
@@ -19,9 +19,8 @@ public class BulletBase : MonoBehaviour
     void Start()
     {
         vel = transform.forward;
-        //ignore collisions with parentTank
+        //ignore collisions with parentTank (Disable Friendly Fire)
         //Physics.IgnoreCollision(GetComponent<Collider>(), parentTank.GetComponent<Collider>());
-        parentTank.GetComponent<Tank>().currentBullets++;
     }
 
     // Update is called once per frame
@@ -34,13 +33,14 @@ public class BulletBase : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        print("Bullet collided with " + collision.gameObject.name);
         // if it collides with a tank, destroy the bullet and the tank unless it is the tank that fired the bullet
         if (collision.gameObject.tag == "AI" || collision.gameObject.tag == "Player")
         {
             Destroy(gameObject);
             float explosionSize = 3.0f;
             collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
-            parentTank.GetComponent<Tank>().currentBullets--;
+            parentTank.GetComponent<Tank>().RemoveBullet();
         }
 
         // if the bullet collides with a bullet, destroy both bullets
@@ -54,7 +54,7 @@ public class BulletBase : MonoBehaviour
 
             Destroy(gameObject);
             Destroy(collision.gameObject);
-            parentTank.GetComponent<Tank>().currentBullets--;
+            parentTank.GetComponent<Tank>().RemoveBullet();
         }
         // If the bullet collides with a wall, destroy the bullet or ricochet
         if (collision.gameObject.tag == "Wall")
@@ -65,7 +65,6 @@ public class BulletBase : MonoBehaviour
                 {
                     Instantiate(ricochetParticlePrefab, transform.position, Quaternion.identity);
                 }
-                print("Bullet collided with " + collision.gameObject.tag);
                 // Calculate the reflection direction using Unity's physics engine
                 Vector3 reflection = Vector3.Reflect(vel.normalized, collision.contacts[0].normal);
 
@@ -86,7 +85,7 @@ public class BulletBase : MonoBehaviour
                     Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
                 }
                 Destroy(gameObject);
-                parentTank.GetComponent<Tank>().currentBullets--;
+                parentTank.GetComponent<Tank>().RemoveBullet();
             }
         }
     }
