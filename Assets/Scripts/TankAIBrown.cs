@@ -13,7 +13,7 @@ public class TankAIBrown : Tank
         agent = GetComponent<NavMeshAgent>();
 
         maxSpeed = 0f; // Stationary
-        rotSpeed = 20f; // Slow turret rotation
+        rotSpeed = 10f; // Slow turret rotation
         bulletSpeed = 10f;
         bulletRicochetMax = 1;
         maxBullets = 1;
@@ -33,13 +33,21 @@ public class TankAIBrown : Tank
         if (nextFire > 0) return; // Check if the tank is ready to fire
 
         Vector3 directionToPlayer = player.transform.position - transform.position;
+
+        // Create a quaternion (rotation) based on looking down the vector from the ai to the player
         Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
 
-        // Rotate turret slowly towards player
-        cannon.rotation = Quaternion.RotateTowards(cannon.rotation, lookRotation, rotSpeed * Time.deltaTime);
+        // Extract the y-axis rotation from the newRotation quaternion
+        float yRotation = lookRotation.eulerAngles.y;
+
+        // Create a new quaternion with only the y-axis rotation
+        Quaternion newYRotation = Quaternion.Euler(0f, yRotation, 270f);
+
+        // slowly rotate the turret towards the player
+        cannon.rotation = Quaternion.RotateTowards(cannon.rotation, newYRotation, rotSpeed * Time.deltaTime);
 
         // Check if the turret is roughly facing the player before shooting
-        if (Quaternion.Angle(cannon.rotation, lookRotation) < 10f)
+        if (Quaternion.Angle(cannon.rotation, newYRotation) < 10f)
         {
             // Check for line of sight
             if (HasLineOfSightToPlayer())
