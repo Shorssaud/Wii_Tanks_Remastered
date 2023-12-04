@@ -94,8 +94,6 @@ public class TankAIAsh : Tank
     {
         RaycastHit hit;
         Vector3 direction = player.transform.position - cannon.position;
-        // show the raycast in the editor
-        Debug.DrawRay(cannon.position, direction, Color.red, 1f);
 
         if (Physics.Raycast(cannon.position, direction, out hit))
         {
