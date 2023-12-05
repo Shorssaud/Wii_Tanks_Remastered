@@ -44,6 +44,7 @@ public class BulletBase : MonoBehaviour
         // if the bullet collides with a bullet, destroy both bullets
         if (collision.gameObject.tag == "Bullet")
         {
+            if (explosionParticlePrefab != null) Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
             Destroy(collision.gameObject);
         }
@@ -70,17 +71,14 @@ public class BulletBase : MonoBehaviour
             }
             else
             {
+                if (explosionParticlePrefab != null) Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
         }
     }
     private void OnDestroy()
     {
-        if (explosionParticlePrefab != null)
-        {
-            Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-        }
-        parentTank.GetComponent<Tank>().RemoveBullet();
+        if (parentTank != null) parentTank.GetComponent<Tank>().RemoveBullet();
     }
 
 }
