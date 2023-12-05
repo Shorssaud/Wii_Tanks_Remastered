@@ -11,7 +11,11 @@ public class Tank : MonoBehaviour
     public int currentBullets;
     public int maxBullets;
     public float fireRate;
-    protected float nextFire;
+    public float mineRate;
+
+    private float nextFire;
+    private float nextMine;
+
 
     public GameObject explosionPrefab;
 
@@ -19,13 +23,21 @@ public class Tank : MonoBehaviour
     private Quaternion targetRotation;
 
     public GameObject bulletPrefab;
+    public GameObject minePrefab;
     
 
     // Start is called before the first frame update
     void Start()
     {
         nextFire = 0;
+        nextMine = 0;
         currentBullets = 0;
+    }
+
+    private void FixedUpdate()
+    {
+        nextFire -= Time.deltaTime; // Decrement the nextFire timer
+        nextMine -= Time.deltaTime; // Decrement the nextMine timer
     }
 
     // Sets the movement vector based on the interger provided
@@ -140,6 +152,39 @@ public class Tank : MonoBehaviour
         // reset firing timer
         nextFire = fireRate;
     }
+
+    // Places a mine at the position of the tank
+    protected void PlaceMine()
+    {
+        if (nextMine > 0)
+            return;
+        // If the tank is in a wall, don't place a mine
+        if (Physics.CheckBox(transform.position, transform.localScale / 2, transform.rotation, LayerMask.GetMask("Default")))
+        {
+            // check the collisions and only place a mine if the tank is not in a object tagged "Wall"
+            Collider[] colliders = Physics.OverlapBox(transform.position, transform.localScale / 2, transform.rotation, LayerMask.GetMask("Default"));
+            foreach (Collider collider in colliders)
+            {
+                if (collider.gameObject.tag == "Wall")
+                {
+                    return;
+                }
+                if (collider.gameObject.tag == "Mine")
+                {
+                    return;
+                }
+            }
+        }
+        // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
+        GameObject mine = Instantiate(minePrefab, transform.position, transform.rotation);
+
+        //set the parent tank
+        mine.GetComponent<Mine>().parentTank = gameObject;
+
+        // reset mine timer
+        nextMine = mineRate;
+    }
+
 
     public void RemoveBullet()
     {

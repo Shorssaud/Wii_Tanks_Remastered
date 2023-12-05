@@ -156,8 +156,10 @@ MonoBehaviour:
   currentBullets: 0
   maxBullets: 1
   fireRate: 1
+  mineRate: 5
   explosionPrefab: {fileID: 1000012903210382, guid: fdc7727355b657843a3323f7c169535e, type: 3}
   bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}
+  minePrefab: {fileID: 5508740373293996974, guid: 97a1272a67022d04e9161ed19777b248, type: 3}
 --- !u!1 &4234362973243973948
 GameObject:
   m_ObjectHideFlags: 0
