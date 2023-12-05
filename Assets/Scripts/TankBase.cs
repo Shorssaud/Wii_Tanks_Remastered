@@ -114,8 +114,29 @@ public class Tank : MonoBehaviour
                 }
             }
         }
+        // if the tank is in a wall, move it out of the wall
+        if (Physics.CheckBox(transform.position, tankCollider.bounds.extents, transform.rotation, defaultLayerMask))
+        {
+            // Get all colliders overlapping the CheckBox
+            Collider[] colliders = Physics.OverlapBox(transform.position, tankCollider.bounds.extents, transform.rotation, defaultLayerMask);
 
-
+            // Iterate through the colliders to check if any have the tank's own tag
+            foreach (Collider collider in colliders)
+            {
+                if (collider.gameObject == gameObject)
+                {
+                    // Ignore collisions with objects having the same tag as the tank
+                    Physics.IgnoreCollision(tankCollider, collider, true);
+                }
+                else
+                {
+                    // If the collider does not have the tank's tag and there's a collision, move the tank out of the wall
+                    transform.position += (transform.position - collider.transform.position).normalized * Time.deltaTime * maxSpeed * 2;
+                    //reset the y position
+                    transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+                }
+            }
+        }
         // Move the tank while avoiding wall collisions
         transform.position += vel * Time.deltaTime;
     }

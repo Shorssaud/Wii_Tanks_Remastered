@@ -24,7 +24,7 @@ public class Mine : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer <= 0.0f)
         {
-            explode();
+            Destroy(gameObject);
         }
     }
 
@@ -36,10 +36,10 @@ public class Mine : MonoBehaviour
         {
             return;
         }
-        explode();
+        Destroy(gameObject);
     }
 
-    void explode()
+    private void OnDestroy()
     {
         // check in a sphere around the mine for tanks
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10.0f);
@@ -52,7 +52,6 @@ public class Mine : MonoBehaviour
                 {
                     Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
                 }
-
                 // destroy the tank
                 c.gameObject.GetComponent<Tank>().DestroyTank();
             }
@@ -67,6 +66,5 @@ public class Mine : MonoBehaviour
                 Destroy(c.gameObject);
             }
         }
-        Destroy(gameObject);
     }
 }
