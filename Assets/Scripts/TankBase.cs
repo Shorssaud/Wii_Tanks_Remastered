@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Exploder.Utils;
 
 public class Tank : MonoBehaviour
 {
@@ -153,6 +154,10 @@ public class Tank : MonoBehaviour
             GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             explosion.transform.localScale *= explosionSize; // Scale the explosion effect
         }
-        Destroy(gameObject);
+        if (ExploderSingleton.ExploderInstance != null) {
+            ExploderSingleton.ExploderInstance.ExplodeObject(gameObject);
+        } else {
+            Destroy(gameObject);
+        }
     }
 }

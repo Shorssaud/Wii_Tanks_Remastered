@@ -7,6 +7,8 @@ TagManager:
   - Wall
   - Bullet
   - AI
+  - Exploder
+  - UseObject
   layers:
   - Default
   - TransparentFX
@@ -16,8 +18,8 @@ TagManager:
   - UI
   - Post Processing
   - Wall
-  - 
-  - 
+  - Fragments
+  - Particles
   - 
   - 
   - 

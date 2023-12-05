@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 400000}
   - component: {fileID: 19800000}
   - component: {fileID: 19900000}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: par1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4805,7 +4805,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 400002}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bullet_collision_effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4839,7 +4839,7 @@ GameObject:
   - component: {fileID: 400004}
   - component: {fileID: 19800002}
   - component: {fileID: 19900002}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: smoke1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9630,7 +9630,7 @@ GameObject:
   - component: {fileID: 400006}
   - component: {fileID: 19800004}
   - component: {fileID: 19900004}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ring1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14430,7 +14430,7 @@ GameObject:
   - component: {fileID: 400008}
   - component: {fileID: 19800006}
   - component: {fileID: 19900006}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: stone1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19203,7 +19203,7 @@ GameObject:
   - component: {fileID: 400010}
   - component: {fileID: 19800008}
   - component: {fileID: 19900008}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: par1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23985,7 +23985,7 @@ GameObject:
   - component: {fileID: 400012}
   - component: {fileID: 19800010}
   - component: {fileID: 19900010}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ring2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
