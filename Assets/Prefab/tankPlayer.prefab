@@ -50,9 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba91b99a84dc2ee43bac51e66044e535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 10
+  maxSpeed: 20
   rotSpeed: 270
-  bulletSpeed: 10
+  bulletSpeed: 20
   bulletRicochetMax: 2
   currentBullets: 0
   maxBullets: 5

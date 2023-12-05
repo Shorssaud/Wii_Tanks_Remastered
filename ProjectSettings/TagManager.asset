@@ -7,6 +7,7 @@ TagManager:
   - Wall
   - Bullet
   - AI
+  - WallBreakable
   layers:
   - Default
   - TransparentFX

@@ -44,17 +44,11 @@ public class BulletBase : MonoBehaviour
         // if the bullet collides with a bullet, destroy both bullets
         if (collision.gameObject.tag == "Bullet")
         {
-            // Instantiate explosion at the point of collision
-            if (explosionParticlePrefab != null)
-            {
-                Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-            }
-
             Destroy(gameObject);
             Destroy(collision.gameObject);
         }
         // If the bullet collides with a wall, destroy the bullet or ricochet
-        if (collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "WallBreakable")
         {
             if (ricochetCount < ricochetMax)
             {
@@ -76,18 +70,16 @@ public class BulletBase : MonoBehaviour
             }
             else
             {
-                // Instantiate explosion at the point of collision
-                if (explosionParticlePrefab != null)
-                {
-                    Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-                }
                 Destroy(gameObject);
             }
         }
     }
     private void OnDestroy()
     {
-        // if the bullet is destroyed, remove it from the parent tank's bullet count
+        if (explosionParticlePrefab != null)
+        {
+            Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
+        }
         parentTank.GetComponent<Tank>().RemoveBullet();
     }
 

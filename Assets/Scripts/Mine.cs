@@ -6,8 +6,6 @@ public class Mine : MonoBehaviour
 {
     public float speed;
     public float timer = 10.0f;
-    private Vector3 vel;
-    private int explosionSize = 3;
 
     public GameObject explosionParticlePrefab;
 
@@ -58,7 +56,7 @@ public class Mine : MonoBehaviour
                 // destroy the tank
                 c.gameObject.GetComponent<Tank>().DestroyTank();
             }
-            if (c.gameObject.tag == "Bullet")
+            if (c.gameObject.tag == "Bullet" || c.gameObject.tag == "WallBreakable")
             {
                 // Instantiate explosion at the point of collision
                 if (explosionParticlePrefab != null)
