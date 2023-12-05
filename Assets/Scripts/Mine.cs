@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Exploder.Utils;
 
 public class Mine : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Mine : MonoBehaviour
 
     // store the parent tank
     public GameObject parentTank;
+
+    public float explosionScale = 1000.0f; // Default scale is 1.0
 
     // Start is called before the first frame update
     void Start()
@@ -39,32 +42,35 @@ public class Mine : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnDestroy()
+private void OnDestroy()
+{
+    // Check in a sphere around the mine for tanks, bullets, and breakable walls
+    Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10.0f);
+    foreach (Collider c in hitColliders)
     {
-        // check in a sphere around the mine for tanks
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10.0f);
-        foreach (Collider c in hitColliders)
+        // Instantiate explosion at the point of collision
+        if (explosionParticlePrefab != null)
         {
-            if (c.gameObject.tag == "AI" || c.gameObject.tag == "Player")
-            {
-                // Instantiate explosion at the point of collision
-                if (explosionParticlePrefab != null)
-                {
-                    Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-                }
-                // destroy the tank
-                c.gameObject.GetComponent<Tank>().DestroyTank();
-            }
-            if (c.gameObject.tag == "Bullet" || c.gameObject.tag == "WallBreakable")
-            {
-                // Instantiate explosion at the point of collision
-                if (explosionParticlePrefab != null)
-                {
-                    Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-                }
-                // destroy the bullet
+            GameObject explosion = Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
+            explosion.transform.localScale *= explosionScale; // Scale the explosion effect
+        }
+
+        // Handle destruction of tanks, bullets, and breakable walls
+        if (c.gameObject.tag == "AI" || c.gameObject.tag == "Player")
+        {
+            c.gameObject.GetComponent<Tank>().DestroyTank(explosionScale); // Pass explosionScale as parameter
+        }
+        else if (c.gameObject.tag == "Bullet")
+        {
+            Destroy(c.gameObject);
+        }
+        else if (c.gameObject.tag == "WallBreakable")
+        {
+
                 Destroy(c.gameObject);
-            }
         }
     }
+}
+
+
 }

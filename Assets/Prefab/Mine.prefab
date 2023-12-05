@@ -120,5 +120,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0
   timer: 10
-  explosionParticlePrefab: {fileID: 1000012903210382, guid: 45d66eb29fa331e4b852db4d6d5aa88d, type: 3}
+  explosionParticlePrefab: {fileID: 1000012903210382, guid: 48c4b163929a91345b495a370248b520, type: 3}
   parentTank: {fileID: 0}
