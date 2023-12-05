@@ -33,31 +33,23 @@ public class BulletBase : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        print("Bullet collided with " + collision.gameObject.name);
         // if it collides with a tank, destroy the bullet and the tank unless it is the tank that fired the bullet
         if (collision.gameObject.tag == "AI" || collision.gameObject.tag == "Player")
         {
             Destroy(gameObject);
             float explosionSize = 3.0f;
             collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
-            parentTank.GetComponent<Tank>().RemoveBullet();
         }
 
         // if the bullet collides with a bullet, destroy both bullets
         if (collision.gameObject.tag == "Bullet")
         {
-            // Instantiate explosion at the point of collision
-            if (explosionParticlePrefab != null)
-            {
-                Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-            }
-
+            if (explosionParticlePrefab != null) Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
             Destroy(collision.gameObject);
-            parentTank.GetComponent<Tank>().RemoveBullet();
         }
         // If the bullet collides with a wall, destroy the bullet or ricochet
-        if (collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "WallBreakable")
         {
             if (ricochetCount < ricochetMax)
             {
@@ -79,15 +71,14 @@ public class BulletBase : MonoBehaviour
             }
             else
             {
-                // Instantiate explosion at the point of collision
-                if (explosionParticlePrefab != null)
-                {
-                    Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-                }
+                if (explosionParticlePrefab != null) Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
                 Destroy(gameObject);
-                parentTank.GetComponent<Tank>().RemoveBullet();
             }
         }
+    }
+    private void OnDestroy()
+    {
+        if (parentTank != null) parentTank.GetComponent<Tank>().RemoveBullet();
     }
 
 }

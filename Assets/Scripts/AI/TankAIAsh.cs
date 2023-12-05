@@ -36,7 +36,6 @@ public class TankAIAsh : Tank
         AimAndShoot();
         MovementDecision();
         stationaryTime += Time.deltaTime;
-        nextFire -= Time.deltaTime; // Decrement the nextFire timer 
     }
 
     private void MovementDecision()
@@ -82,7 +81,7 @@ public class TankAIAsh : Tank
         if (Vector3.Angle(cannon.forward, directionToPlayer) < 10f)
         {
             // Check for line of sight
-            if (HasLineOfSightToPlayer() && nextFire < 0)
+            if (HasLineOfSightToPlayer())
             {
                 Shoot(bulletSpawn);
             }

@@ -9,6 +9,7 @@ TagManager:
   - AI
   - Exploder
   - UseObject
+  - WallBreakable
   layers:
   - Default
   - TransparentFX
@@ -20,6 +21,9 @@ TagManager:
   - Wall
   - Fragments
   - Particles
+  - Mine
+  - 
+  - 
   - 
   - 
   - 
