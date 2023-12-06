@@ -122,3 +122,4 @@ MonoBehaviour:
   timer: 10
   explosionParticlePrefab: {fileID: 1000012903210382, guid: 48c4b163929a91345b495a370248b520, type: 3}
   parentTank: {fileID: 0}
+  explosionScale: 4

@@ -25,6 +25,10 @@ public class Tank : MonoBehaviour
 
     public GameObject bulletPrefab;
     public GameObject minePrefab;
+
+    public TrailRenderer leftTrailRenderer;
+    public TrailRenderer rightTrailRenderer;
+    
     
 
     // Start is called before the first frame update
@@ -114,8 +118,24 @@ public class Tank : MonoBehaviour
                 }
             }
         }
+
+        if (vel != Vector3.zero)
+        {
+            // Enable the trail renderers if the tank is moving
+            if (leftTrailRenderer != null) leftTrailRenderer.emitting = true;
+            if (rightTrailRenderer != null) rightTrailRenderer.emitting = true;
+        }
+        else
+        {
+            // Disable the trail renderers if the tank is not moving
+            if (leftTrailRenderer != null) leftTrailRenderer.emitting = false;
+            if (rightTrailRenderer != null) rightTrailRenderer.emitting = false;
+        }
+
         // Move the tank while avoiding wall collisions
         transform.position += vel * Time.deltaTime;
+
+
     }
 
     // Shoots a basic bullet

@@ -13,7 +13,7 @@ public class Mine : MonoBehaviour
     // store the parent tank
     public GameObject parentTank;
 
-    public float explosionScale = 1000.0f; // Default scale is 1.0
+    public float explosionScale = 1.0f; // Default scale is 1.0
 
     // Start is called before the first frame update
     void Start()

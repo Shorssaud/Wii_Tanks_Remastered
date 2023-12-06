@@ -73,10 +73,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2395768319795965166}
   - component: {fileID: 2175619590807515941}
-  - component: {fileID: 441417158360075819}
   - component: {fileID: 6171068732221415080}
   - component: {fileID: 6670298966495623452}
-  - component: {fileID: 3031989586923180462}
+  - component: {fileID: 689529762165013991}
   m_Layer: 0
   m_Name: AITankBrown
   m_TagString: AI
@@ -128,28 +127,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 2
---- !u!64 &441417158360075819
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3434008483057092561}
-  m_Material: {fileID: 13400000, guid: 26ea14fc38a31a046818b75333981656, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8399849596566480289, guid: 564c565fad448dd40818f99f42d02921, type: 3}
 --- !u!137 &6171068732221415080
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -227,32 +204,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3031989586923180462
-MonoBehaviour:
+--- !u!135 &689529762165013991
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3434008483057092561}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f8942cd1701000408b7740503ad98e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxSpeed: 0
-  rotSpeed: 0
-  bulletSpeed: 0
-  bulletRicochetMax: 0
-  currentBullets: 0
-  maxBullets: 0
-  fireRate: 0
-  nextFire: 0
-  explosionPrefab: {fileID: 1000012903210382, guid: 43d8eeeb8f8a3d74bb23a01a2adc4f80, type: 3}
-  rb: {fileID: 2175619590807515941}
-  bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}
-  bulletSpawn: {fileID: 2545442907691268288}
-  cannon: {fileID: 7498940210823476087}
-  tankBase: {fileID: 2008498340707395028}
+  serializedVersion: 3
+  m_Radius: 12
+  m_Center: {x: 0, y: 8, z: 0}
 --- !u!1 &8313792355909824392
 GameObject:
   m_ObjectHideFlags: 0
