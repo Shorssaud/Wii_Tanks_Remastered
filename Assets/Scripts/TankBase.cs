@@ -87,7 +87,7 @@ public class Tank : MonoBehaviour
         // Get the tank's collider to measure its size
         SphereCollider tankCollider = GetComponent<SphereCollider>();
 
-        // Define the layer mask for the "Default" layer (replace "Default" with your wall layer name)
+        // Define the layer mask for the "Default" layer 
         LayerMask defaultLayerMask = LayerMask.GetMask("Default");
 
         // Ignore collisions between the tank's collider and itself

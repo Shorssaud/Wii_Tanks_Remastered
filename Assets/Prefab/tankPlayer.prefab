@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 551568467825302385}
   - component: {fileID: 5769084969283705170}
   - component: {fileID: 3839360598852473994}
-  - component: {fileID: 1509259028943952755}
+  - component: {fileID: 9144619517315310744}
   m_Layer: 0
   m_Name: tankPlayer
   m_TagString: Player
@@ -116,8 +116,8 @@ SkinnedMeshRenderer:
     m_Center: {x: -7.1445317, y: 0, z: 3.9663105}
     m_Extent: {x: 7.0849614, y: 10.054693, z: 15.7251}
   m_DirtyAABB: 0
---- !u!65 &1509259028943952755
-BoxCollider:
+--- !u!135 &9144619517315310744
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -135,8 +135,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 18, y: 14, z: 18}
-  m_Center: {x: 0, y: 8, z: -0.041228928}
+  m_Radius: 12
+  m_Center: {x: 0, y: 8, z: 0}
 --- !u!1 &6627189176475447380
 GameObject:
   m_ObjectHideFlags: 0
