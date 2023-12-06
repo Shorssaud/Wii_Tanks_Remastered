@@ -53,10 +53,9 @@ public class Tank : MonoBehaviour
             vel = Vector3.zero;
             return;
         }
-        horizontal = horizontal * (-1);
 
         // Calculate the angle in radians using Mathf.Atan2
-        float angle = Mathf.Atan2(vertical, horizontal);
+        float angle = Mathf.Atan2(horizontal, vertical);
 
         // Convert the angle to degrees
         float angleDegrees = angle * Mathf.Rad2Deg;
@@ -86,7 +85,7 @@ public class Tank : MonoBehaviour
         //calculate the tanks future position after moving
         Vector3 futurePosition = transform.position + vel * Time.deltaTime;
         // Get the tank's collider to measure its size
-        Collider tankCollider = GetComponent<BoxCollider>();
+        SphereCollider tankCollider = GetComponent<SphereCollider>();
 
         // Define the layer mask for the "Default" layer (replace "Default" with your wall layer name)
         LayerMask defaultLayerMask = LayerMask.GetMask("Default");
@@ -95,10 +94,10 @@ public class Tank : MonoBehaviour
         Physics.IgnoreCollision(tankCollider, tankCollider);
 
         // Perform a check to see if the tank would collide with any object in default layer at the future position
-        if (Physics.CheckBox(futurePosition, tankCollider.bounds.extents, transform.rotation, defaultLayerMask) && vel != Vector3.zero)
+        if (Physics.CheckSphere(futurePosition, tankCollider.radius, defaultLayerMask) && vel != Vector3.zero)
         {
-            // Get all colliders overlapping the CheckBox
-            Collider[] colliders = Physics.OverlapBox(futurePosition, tankCollider.bounds.extents, transform.rotation, defaultLayerMask);
+            // Get all colliders overlapping the CheckSphere
+            Collider[] colliders = Physics.OverlapSphere(futurePosition, tankCollider.radius/4, defaultLayerMask);
 
             // Iterate through the colliders to check if any have the tank's own tag
             foreach (Collider collider in colliders)
@@ -112,29 +111,6 @@ public class Tank : MonoBehaviour
                 {
                     // If the collider does not have the tank's tag and there's a collision, set the velocity to zero
                     vel = Vector3.zero;
-                }
-            }
-        }
-        // if the tank is in a wall, move it out of the wall
-        if (Physics.CheckBox(transform.position, tankCollider.bounds.extents, transform.rotation, defaultLayerMask))
-        {
-            // Get all colliders overlapping the CheckBox
-            Collider[] colliders = Physics.OverlapBox(transform.position, tankCollider.bounds.extents, transform.rotation, defaultLayerMask);
-
-            // Iterate through the colliders to check if any have the tank's own tag
-            foreach (Collider collider in colliders)
-            {
-                if (collider.gameObject == gameObject)
-                {
-                    // Ignore collisions with objects having the same tag as the tank
-                    Physics.IgnoreCollision(tankCollider, collider, true);
-                }
-                else
-                {
-                    // If the collider does not have the tank's tag and there's a collision, move the tank out of the wall
-                    transform.position += (transform.position - collider.transform.position).normalized * Time.deltaTime * maxSpeed * 2;
-                    //reset the y position
-                    transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
                 }
             }
         }
