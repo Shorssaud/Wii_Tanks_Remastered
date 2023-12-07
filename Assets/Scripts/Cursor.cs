@@ -5,6 +5,8 @@ using UnityEngine;
 public class CursorController : MonoBehaviour
 {
     public Texture2D cursorTexture; // Reference to your cursor image
+    private Vector2 hotspot;
+
 
     void Start()
     {
@@ -12,6 +14,10 @@ public class CursorController : MonoBehaviour
         cursorTexture.filterMode = FilterMode.Point;
         cursorTexture.anisoLevel = 0;
 
-        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+        // Calculate the center of the texture
+        hotspot = new Vector2(cursorTexture.width / 2, cursorTexture.height / 2);
+
+        // Set the cursor with the center hotspot
+        Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
     }
 }
