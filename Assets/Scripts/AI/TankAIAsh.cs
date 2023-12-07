@@ -65,6 +65,11 @@ public class TankAIAsh : Tank
     // This function can be changed to make the AI tank aim and shoot differently
     private void AimAndShoot()
     {
+        // Before doing anything, check if the player is still active
+        if (player == null)
+        {
+            return; // If not, don't aim or shoot
+        }
         cannon.rotation = currentCannonRot; //Always keep the cannon facing the desired direction
         Vector3 directionToPlayer = player.transform.position - transform.position; // Get direction to player
         directionToPlayer.y = 0; // Ignore vertical difference
