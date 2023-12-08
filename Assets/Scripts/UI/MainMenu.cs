@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour
     public void Options()
     {
         // Load the scene named "Options"
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Options");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
     public void QuitGame()
     {
@@ -22,5 +22,16 @@ public class MainMenu : MonoBehaviour
     #else
         Application.Quit();
     #endif
+    }
+    public void Restart()
+    {
+        // Reset values here
+        // Load the scene named "BaseGame"
+        UnityEngine.SceneManagement.SceneManager.LoadScene("BaseGame");
+    }
+    public void Main()
+    {
+        // Load the scene named "MainMenu"
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 }

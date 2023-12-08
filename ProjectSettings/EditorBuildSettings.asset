@@ -11,4 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BaseGame.unity
     guid: cc0c27bccf6b6ba44b8a9aa62e4d6521
+  - enabled: 1
+    path: Assets/Scenes/Menus/LoseMenu.unity
+    guid: b99b7ea8422d66c4195e8ee84113b989
+  - enabled: 1
+    path: Assets/Scenes/Menus/WinMenu.unity
+    guid: 1969fc999b5b1c146b814765070cf7ed
+  - enabled: 1
+    path: Assets/Scenes/Menus/Options.unity
+    guid: 076c17d63c899ad42aebc71bc0ed5555
   m_configObjects: {}
