@@ -1,83 +1,76 @@
-//using UnityEngine;
-//using UnityEngine.AI;
+using UnityEngine;
+using UnityEngine.AI;
 
-//public class TankAIBrown : Tank
-//{
-//    private GameObject player;
-//    private NavMeshAgent agent;
+public class TankAIBrown : Tank
+{
+    private GameObject player;
+    private Quaternion currentCannonRot;
 
-//    // Start is called before the first frame update
-//    void Start()
-//    {
-//        player = GameObject.FindGameObjectWithTag("Player");
-//        agent = GetComponent<NavMeshAgent>();
+    private Transform cannon;
+    private Transform bulletSpawn;
 
-//        maxSpeed = 0f; // Stationary
-//        rotSpeed = 10f; // Slow turret rotation
-//        bulletSpeed = 10f;
-//        bulletRicochetMax = 1;
-//        maxBullets = 1;
-//        fireRate = 2f; // Slow fire rate
-//        nextFire = 0f; // Initialize nextFire
-//    }
+    private Quaternion aimAngle;
 
-//    // Update is called once per frame
-//    void Update()
-//    {
-//        AimAndShoot();
-//        nextFire -= Time.deltaTime; // Decrement the nextFire timer
-//    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+        cannon = transform.Find("cannon");
+        bulletSpawn = cannon.Find("bulletSpawn");
 
-//    private void AimAndShoot()
-//    {
-//        if (nextFire > 0) return; // Check if the tank is ready to fire
+        currentCannonRot = cannon.rotation;
+        aimAngle = currentCannonRot;
+    }
 
-//        Vector3 directionToPlayer = player.transform.position - transform.position;
+    // Update is called once per frame
+    void Update()
+    {
+        AimAndShoot();
+    }
 
-//        // Create a quaternion (rotation) based on looking down the vector from the ai to the player
-//        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+    private void AimAndShoot()
+    {
 
-//        // Extract the y-axis rotation from the newRotation quaternion
-//        float yRotation = lookRotation.eulerAngles.y;
+        // rotate randomly when reach
+        if (Quaternion.Angle(aimAngle, cannon.rotation) < 10f)
+        {
+            aimAngle = Quaternion.Euler(0f, Random.Range(0f, 360f), -90f);
+        }
 
-//        // Create a new quaternion with only the y-axis rotation
-//        Quaternion newYRotation = Quaternion.Euler(0f, yRotation, 270f);
+        // slowly rotate the turret towards the player
+        cannon.rotation = Quaternion.RotateTowards(cannon.rotation, aimAngle, rotSpeed * Time.deltaTime);
 
-//        // slowly rotate the turret towards the player
-//        cannon.rotation = Quaternion.RotateTowards(cannon.rotation, newYRotation, rotSpeed * Time.deltaTime);
+        // Check for line of sight
+        if (Quaternion.Angle(aimAngle, currentCannonRot) < 10f)
+        {
+            if (HasLineOfSightToPlayer())
+            {
+                Shoot(bulletSpawn);
+            }
+        }
+    }
 
-//        // Check if the turret is roughly facing the player before shooting
-//        if (Quaternion.Angle(cannon.rotation, newYRotation) < 10f)
-//        {
-//            // Check for line of sight
-//            if (HasLineOfSightToPlayer())
-//            {
-//                Shoot();
-//            }
-//        }
-//    }
+    private bool HasLineOfSightToPlayer()
+    {
+        RaycastHit hit;
+        Vector3 direction = player.transform.position - cannon.position;
 
-//private bool HasLineOfSightToPlayer()
-//{
-//    RaycastHit hit;
-//    Vector3 direction = player.transform.position - cannon.position;
+        if (Physics.Raycast(cannon.position, direction, out hit))
+        {
+            // Check if the raycast hits the player
+            if (hit.collider.gameObject == player)
+            {
+                return true; // Line of sight is clear, player is hit directly
+            }
 
-//    if (Physics.Raycast(cannon.position, direction, out hit))
-//    {
-//        // Check if the raycast hits the player
-//        if (hit.collider.gameObject == player)
-//        {
-//            return true; // Line of sight is clear, player is hit directly
-//        }
+            // Check if the raycast hits a wall
+            if (hit.collider.tag == "Wall")
+            {
+                return false; // Line of sight is blocked by a wall
+            }
+        }
 
-//        // Check if the raycast hits a wall
-//        if (hit.collider.tag == "Wall")
-//        {
-//            return false; // Line of sight is blocked by a wall
-//        }
-//    }
+        return false; // Line of sight is not clear
+    }
 
-//    return false; // Line of sight is not clear
-//}
-
-//}
+}

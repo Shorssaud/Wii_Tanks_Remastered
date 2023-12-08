@@ -36,6 +36,7 @@ public class TankPlayer : Tank
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+        Move(horizontal, vertical);
         if (Input.GetMouseButton(0))
         {
             Shoot(bulletSpawn);
@@ -46,7 +47,9 @@ public class TankPlayer : Tank
         }
 
         Move(horizontal, vertical);
+        // Make the cannon always point at the mouse
         CannonTracer();
+        print(GetScore());
     }
 
 private void CannonTracer()
@@ -97,5 +100,41 @@ private void CannonTracer()
             Gizmos.color = Color.red;
             Gizmos.DrawLine(lastRay.origin, lastRay.origin + lastRay.direction * 1000f);
         }
+    }
+    public void AddScore()
+    {
+        int currentScore = GetScore();
+        PlayerPrefs.SetInt("TotalScore", currentScore + 1);
+        PlayerPrefs.Save();
+    }
+
+    public void AddLife()
+    {
+        int currentLives = GetLives();
+        PlayerPrefs.SetInt("Lives", currentLives + 1);
+        PlayerPrefs.Save();
+    }
+
+    public void RemoveLife()
+    {
+        int currentLives = GetLives();
+        PlayerPrefs.SetInt("Lives", currentLives - 1);
+        PlayerPrefs.Save();
+    }
+
+    public int GetScore()
+    {
+        return PlayerPrefs.GetInt("TotalScore");
+    }
+
+    public int GetLives()
+    {
+        return PlayerPrefs.GetInt("Lives");
+    }
+
+    public void EndGame()
+    {
+        PlayerPrefs.SetInt("TotalScore", 0);
+        PlayerPrefs.SetInt("Lives", 3);
     }
 }

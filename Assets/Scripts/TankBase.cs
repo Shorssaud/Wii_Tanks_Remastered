@@ -16,6 +16,7 @@ public class Tank : MonoBehaviour
 
     private float nextFire;
     private float nextMine;
+    private int shotPause;
 
 
     public GameObject explosionPrefab;
@@ -37,6 +38,7 @@ public class Tank : MonoBehaviour
         nextFire = 0;
         nextMine = 0;
         currentBullets = 0;
+        shotPause = 0;
     }
 
     private void FixedUpdate()
@@ -84,7 +86,11 @@ public class Tank : MonoBehaviour
         }
         // Set the rotation of the rigidbody to the target rotation
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
-
+        if (shotPause > 0)
+        {
+            shotPause--;
+            return;
+        }
         //Checking for wall collisions
         //calculate the tanks future position after moving
         Vector3 futurePosition = transform.position + vel * Time.deltaTime;
@@ -156,6 +162,7 @@ public class Tank : MonoBehaviour
                 }
             }
         }
+        shotPause = 50;
         currentBullets++;
         // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
