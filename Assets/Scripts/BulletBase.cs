@@ -39,6 +39,11 @@ public class BulletBase : MonoBehaviour
             Destroy(gameObject);
             float explosionSize = 3.0f;
             collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
+            if (collision.gameObject.tag == "AI")
+            {
+                PlayerPrefs.SetInt("TotalScore", totalScore);
+                PlayerPrefs.Save();
+            }
         }
 
         // if the bullet collides with a bullet, destroy both bullets

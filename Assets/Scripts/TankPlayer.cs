@@ -67,4 +67,40 @@ public class TankPlayer : Tank
             cannon.rotation = newYRotation;
         }
     }
+    public void AddScore()
+    {
+        int currentScore = GetScore();
+        PlayerPrefs.SetInt("TotalScore", currentScore + 1);
+        PlayerPrefs.Save();
+    }
+
+    public void AddLife()
+    {
+        int currentLives = GetLives();
+        PlayerPrefs.SetInt("Lives", currentLives + 1);
+        PlayerPrefs.Save();
+    }
+
+    public void RemoveLife()
+    {
+        int currentLives = GetLives();
+        PlayerPrefs.SetInt("Lives", currentLives - 1);
+        PlayerPrefs.Save();
+    }
+
+    public int GetScore()
+    {
+        return PlayerPrefs.GetInt("TotalScore");
+    }
+
+    public int GetLives()
+    {
+        return PlayerPrefs.GetInt("Lives");
+    }
+
+    public void EndGame()
+    {
+        PlayerPrefs.SetInt("TotalScore", 0);
+        PlayerPrefs.SetInt("Lives", 3);
+    }
 }

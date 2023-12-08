@@ -90,8 +90,8 @@ public class TankAIGreen : Tank
     bool ThinAngleSearch()
     {
         // First check near last rotation angle with 2 casts
-        Vector3 slightLeft = Quaternion.Euler(0, Cannon.rotation.eulerAngles.y - 10, 0) * transform.forward;
-        Vector3 slightRight = Quaternion.Euler(0, Cannon.rotation.eulerAngles.y + 10, 0) * transform.forward;
+        Vector3 slightLeft = Quaternion.Euler(0, Cannon.rotation.eulerAngles.y + 70, 0) * transform.position;
+        Vector3 slightRight = Quaternion.Euler(0, Cannon.rotation.eulerAngles.y + 50 , 0) * transform.position;
         int temp = SimulateBouncingRay(transform.position, Cannon.forward, bulletRicochetMax);
         int slres = SimulateBouncingRay(transform.position, slightLeft, bulletRicochetMax);
         int srres = SimulateBouncingRay(transform.position, slightRight, bulletRicochetMax);
@@ -164,14 +164,14 @@ public class TankAIGreen : Tank
         if (Physics.Raycast(origin, direction, out hit))
         {
             // Check if the ray hit the player
+                if (hit.collider.CompareTag("AI"))
+                    return 0;
             if (hit.collider.CompareTag("Player"))
             {
                 // Perform actions when the player is hit by the bouncing ray
                 Debug.DrawRay(origin, direction * 50, Color.red);
                 return 1;
             }
-            if (hit.collider.CompareTag("AI"))
-                return 0;
             Debug.DrawRay(origin, direction * 50, Color.blue);
             // If the ray hit a wall, calculate the reflection direction
             Vector3 reflection = Vector3.Reflect(direction, hit.normal);
