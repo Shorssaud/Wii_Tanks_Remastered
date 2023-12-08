@@ -9,7 +9,7 @@ public class MouseCursor : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main; // Find the main camera
-        Cursor.visible = true; // Hide the system cursor
+        Cursor.visible = false; // Hide the system cursor
     }
 
     void LateUpdate()
