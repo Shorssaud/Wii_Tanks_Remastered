@@ -30,7 +30,6 @@ public class BulletBase : MonoBehaviour
         transform.position += vel * speed * Time.deltaTime;
     }
 
-
     void OnCollisionEnter(Collision collision)
     {
         // if it collides with a tank, destroy the bullet and the tank unless it is the tank that fired the bullet
