@@ -63,7 +63,9 @@ public class TankPlayer : Tank
         {
             PlaceMine();
         }
-        print(GetScore());
+
+        // Make the cannon always point at the mouse
+        CannonTracer();
     }
 
 private void CannonTracer()

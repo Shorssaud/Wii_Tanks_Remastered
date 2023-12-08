@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Exploder.Utils;
+using UnityEngine.AI;
 
 public class Mine : MonoBehaviour
 {
@@ -13,12 +14,13 @@ public class Mine : MonoBehaviour
     // store the parent tank
     public GameObject parentTank;
 
+    private bool isArmed = false;
+
     public float explosionScale = 1.0f; // Default scale is 1.0
 
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
