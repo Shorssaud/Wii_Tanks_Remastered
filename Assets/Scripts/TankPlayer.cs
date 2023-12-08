@@ -19,6 +19,7 @@ public class TankPlayer : Tank
         // Get horizontal and vertical input values
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+        Move(horizontal, vertical);
         if (Input.GetMouseButton(0))
         {
             Shoot(bulletSpawn);
@@ -28,7 +29,6 @@ public class TankPlayer : Tank
             PlaceMine();
         }
 
-        Move(horizontal, vertical);
         // Make the cannon always point at the mouse
         CannonTracer();
     }
