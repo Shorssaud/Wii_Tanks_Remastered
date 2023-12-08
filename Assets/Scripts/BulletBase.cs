@@ -41,7 +41,8 @@ public class BulletBase : MonoBehaviour
             collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
             if (collision.gameObject.tag == "AI")
             {
-                PlayerPrefs.SetInt("TotalScore", totalScore);
+                int currentScore = PlayerPrefs.GetInt("TotalScore");
+                PlayerPrefs.SetInt("TotalScore", currentScore + 1);
                 PlayerPrefs.Save();
             }
         }

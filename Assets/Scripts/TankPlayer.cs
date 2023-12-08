@@ -31,6 +31,7 @@ public class TankPlayer : Tank
 
         // Make the cannon always point at the mouse
         CannonTracer();
+        print(GetScore());
     }
 
         // Makes the cannon always point at the mouse
