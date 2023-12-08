@@ -1,14 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TankPlayer : Tank
 {
     private Transform cannon;
     private Transform bulletSpawn;
+    private Camera mainCamera;
+
+    public GameObject cursor;
+
+    private Gamepad gamepad;
+
+    // For gizmo drawing
+    private Ray lastRay;
+    private bool didHit;
+    private RaycastHit lastHit;
+
     // Start is called before the first frame update
     void Start()
     {
+        gamepad = Gamepad.all[0];
+        for (int i = 0; i < Gamepad.all.Count; i++)
+        {
+            Debug.Log(Gamepad.all[i].name);
+        }
+        mainCamera = Camera.main;
         cannon = transform.Find("cannon");
         bulletSpawn = cannon.Find("bulletSpawn");
     }
@@ -16,7 +34,6 @@ public class TankPlayer : Tank
     // Update is called once per frame
     void Update()
     {
-        // Get horizontal and vertical input values
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         if (Input.GetMouseButton(0))
@@ -29,42 +46,56 @@ public class TankPlayer : Tank
         }
 
         Move(horizontal, vertical);
-        // Make the cannon always point at the mouse
         CannonTracer();
     }
 
-        // Makes the cannon always point at the mouse
-    private void CannonTracer()
+private void CannonTracer()
+{
+    int floorLayerMask = 1 << LayerMask.NameToLayer("Floor");
+
+    if (cursor != null)
     {
-        // Set up a layer mask to include only the floor layer
-        int floorLayerMask = 1 << LayerMask.NameToLayer("Floor");
+        Ray camRay = mainCamera.ScreenPointToRay(mainCamera.WorldToScreenPoint(cursor.transform.position));
+        lastRay = camRay;
 
-        // Create a ray from the mouse cursor on screen in the direction of the camera
-        Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        // Create a RaycastHit variable to store information about what was hit by the ray
-        RaycastHit floorHit;
-
-        // Perform the raycast and if it hits something on the floor layer...
-        if (Physics.Raycast(camRay, out floorHit, 1000f, floorLayerMask))
+        if (Physics.Raycast(camRay, out RaycastHit floorHit, 1000f, floorLayerMask))
         {
-            // Create a vector from the player to the point on the floor the raycast from the mouse hit
+            didHit = true;
+            lastHit = floorHit;
+
             Vector3 playerToMouse = floorHit.point - cannon.position;
+            playerToMouse.y = 10f; // Ensure the vector is entirely along the floor plane
 
-            // Ensure the vector is entirely along the floor plane
-            playerToMouse.y = 0f;
-
-            // Create a quaternion (rotation) based on looking down the vector from the player to the mouse
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-
-            // Extract the y-axis rotation from the newRotation quaternion
             float yRotation = newRotation.eulerAngles.y;
 
-            // Create a new quaternion with only the y-axis rotation
-            Quaternion newYRotation = Quaternion.Euler(0f, yRotation, 270f);
+            // Set the cannon's rotation
+            // Preserve the current X and Z rotations, only change the Y rotation
+            cannon.rotation = Quaternion.Euler(cannon.rotation.eulerAngles.x, yRotation, cannon.rotation.eulerAngles.z);
+        }
+        else
+        {
+            didHit = false;
+        }
+    }
+}
 
-            // Set the player's rotation to this new rotation
-            cannon.rotation = newYRotation;
+
+    void OnDrawGizmos()
+    {
+        if (didHit)
+        {
+            // Draw a green line from the cannon to the hit point
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(lastRay.origin, lastHit.point);
+            // Draw a sphere at the hit point
+            Gizmos.DrawSphere(lastHit.point, 0.2f);
+        }
+        else
+        {
+            // Draw a red line along the ray
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(lastRay.origin, lastRay.origin + lastRay.direction * 1000f);
         }
     }
 }
