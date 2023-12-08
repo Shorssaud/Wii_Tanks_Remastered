@@ -21,7 +21,7 @@ public class TankPlayer : Tank
     // Start is called before the first frame update
     void Start()
     {
-        gamepad = Gamepad.all[0];
+        gamepad = Gamepad.current;
         for (int i = 0; i < Gamepad.all.Count; i++)
         {
             Debug.Log(Gamepad.all[i].name);
@@ -37,18 +37,32 @@ public class TankPlayer : Tank
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Move(horizontal, vertical);
+        CannonTracer();
+
+        // Handle shooting and placing mines with the controller
+        if (gamepad != null)
+        {
+            if (gamepad.rightShoulder.wasPressedThisFrame)
+            {
+                Shoot(bulletSpawn);
+            }
+
+            if (gamepad.leftShoulder.wasPressedThisFrame)
+            {
+                PlaceMine();
+            }
+        }
+
+        // Handle shooting and placing mines with the mouse and keyboard
         if (Input.GetMouseButton(0))
         {
             Shoot(bulletSpawn);
         }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             PlaceMine();
         }
-
-        Move(horizontal, vertical);
-        // Make the cannon always point at the mouse
-        CannonTracer();
         print(GetScore());
     }
 
