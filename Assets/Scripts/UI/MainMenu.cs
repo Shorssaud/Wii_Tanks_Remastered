@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
     void Start(){
+        // TODO : Ajouter une condition pour vérifier qu'on est pas en mode 1 life
         PlayerPrefs.SetInt("Lives", 3);
     }
     public void PlayGame()
