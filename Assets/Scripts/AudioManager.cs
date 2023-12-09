@@ -128,4 +128,12 @@ public class AudioManager : MonoBehaviour
             s.source.Stop();
         }
     }
+
+    public void SetVolume()
+    {
+        foreach (Sound s in sounds)
+        {
+            s.source.volume = PlayerPrefs.GetInt("volume") / 100.0f;
+        }
+    }
 }
