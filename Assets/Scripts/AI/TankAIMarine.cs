@@ -15,7 +15,7 @@ public class TankAIMarine: Tank
     private Vector3 currentDest;
     float horizontal = 0;
     float vertical = 0;
-    int randRad = 40;
+    int randRad = 60;
     // Start is called before the first frame update
     void Start()
     {
