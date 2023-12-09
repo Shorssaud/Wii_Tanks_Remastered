@@ -20,7 +20,7 @@ public class MainMenu : MonoBehaviour
     public void Options()
     {
         // Load the scene named "Options"
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/Options");
         FindObjectOfType<AudioManager>().Play("MenuSelection");
     }
     public void QuitGame()
