@@ -13,8 +13,6 @@ public class MainMenu : MonoBehaviour
     {
         PlayerPrefs.SetInt("Level", 1);
         UnityEngine.SceneManagement.SceneManager.LoadScene(5);
-        // Load the scene named "BaseGame"
-        UnityEngine.SceneManagement.SceneManager.LoadScene("BaseGame");
         FindObjectOfType<AudioManager>().PauseEverything();
         FindObjectOfType<AudioManager>().Play("MenuSelection");
     }
