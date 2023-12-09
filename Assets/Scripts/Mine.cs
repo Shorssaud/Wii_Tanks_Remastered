@@ -27,6 +27,7 @@ public class Mine : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer <= 0.0f)
         {
+            BlowUp();
             Destroy(gameObject);
         }
     }
