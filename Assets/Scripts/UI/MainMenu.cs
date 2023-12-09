@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
         PlayerPrefs.SetInt("Level", 1);
-        UnityEngine.SceneManagement.SceneManager.LoadScene(5);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/Transition");
         FindObjectOfType<AudioManager>().PauseEverything();
         FindObjectOfType<AudioManager>().Play("MenuSelection");
     }
