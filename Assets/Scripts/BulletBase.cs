@@ -19,6 +19,7 @@ public class BulletBase : MonoBehaviour
     void Start()
     {
         vel = transform.forward;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
         //ignore collisions with parentTank (Disable Friendly Fire)
         //Physics.IgnoreCollision(GetComponent<Collider>(), parentTank.GetComponent<Collider>());
     }
