@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6267443379738163704}
   - component: {fileID: 5365266367414366202}
+  - component: {fileID: 237385044190550643}
   m_Layer: 0
   m_Name: Wall3
   m_TagString: Wall
@@ -56,6 +57,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.68, y: 5.68, z: 5.68}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &237385044190550643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1758082759690279786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &2405459364070730482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -127,6 +147,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
       propertyPath: m_Name
       value: Top
+      objectReference: {fileID: 0}
+    - target: {fileID: 7861854473326295642, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

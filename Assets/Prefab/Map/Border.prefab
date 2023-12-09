@@ -594,6 +594,7 @@ GameObject:
   - component: {fileID: 5309852609152354429}
   - component: {fileID: 4730754456085145295}
   - component: {fileID: 8155205249615370391}
+  - component: {fileID: 87498285779811215}
   m_Layer: 0
   m_Name: Border
   m_TagString: Wall
@@ -756,6 +757,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 6, y: 6, z: 102.57687}
   m_Center: {x: 36, y: 3, z: 16}
+--- !u!114 &87498285779811215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898825709612339614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &1040727797778415065
 GameObject:
   m_ObjectHideFlags: 0

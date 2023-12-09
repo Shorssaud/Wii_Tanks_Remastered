@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 
 // This class can be used as a reference for other AI tanks
@@ -7,16 +8,19 @@ public class TankAIYellow : Tank
 {
     private GameObject player;
     private NavMeshAgent agent;
-    private float movementDecisionInterval = 2f;
+    private float movementDecisionInterval = 0.4f;
     private Quaternion currentCannonRot;
 
     private Transform cannon;
     private Transform bulletSpawn;
 
-    private float avoidanceDistance = 40f;
+    private float avoidanceDistance = 30f;
     private LayerMask mineLayer;
     private LayerMask aiLayer;
     private float edgeBiasDistance = 15f;
+    float horizontal = 0;
+    float vertical = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +43,7 @@ public class TankAIYellow : Tank
     // Update is called once per frame
     void Update()
     {
+        Move(horizontal, vertical);
         AimAndShoot();
     }
 
@@ -66,6 +71,12 @@ public class TankAIYellow : Tank
             randomDirection += transform.position;
 
             NavMesh.SamplePosition(randomDirection, out hit, avoidanceDistance, NavMesh.AllAreas);
+            Vector3 currentMoveTarget = new Vector3(hit.position.x, 0, hit.position.z);
+            horizontal = (currentMoveTarget.x - transform.position.x) / 10f;
+            vertical = (currentMoveTarget.z - transform.position.z) / 10f;
+            // round this to 1, 0, or -1
+            horizontal = Mathf.Round(horizontal);
+            vertical = Mathf.Round(vertical);
         }
     }
 
