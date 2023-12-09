@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+    void Start(){
+        PlayerPrefs.SetInt("Lives", 3);
+    }
     public void PlayGame()
     {
         // Load the scene named "BaseGame"
