@@ -80,10 +80,6 @@ public class Tank : MonoBehaviour
             // Calculate the target rotation based on the angle
             targetRotation = Quaternion.Euler(0f, angleDegrees + 180, 0f);
         }
-        if (transform.rotation != targetRotation)
-        {
-            vel = Vector3.zero;
-        }
         // Set the rotation of the rigidbody to the target rotation
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
         if (shotPause > 0)

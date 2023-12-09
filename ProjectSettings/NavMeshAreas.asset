@@ -11,9 +11,9 @@ NavMeshProjectSettings:
     cost: 1
   - name: Jump
     cost: 2
-  - name: Hazard
+  - name: Mine
     cost: 1
-  - name: 
+  - name: Bullet
     cost: 1
   - name: 
     cost: 1
@@ -94,7 +94,7 @@ NavMeshProjectSettings:
     agentRadius: 1
     agentHeight: 2
     agentSlope: 0
-    agentClimb: 1
+    agentClimb: 0.001
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
