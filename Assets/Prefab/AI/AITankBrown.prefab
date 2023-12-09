@@ -74,8 +74,8 @@ GameObject:
   - component: {fileID: 2395768319795965166}
   - component: {fileID: 2175619590807515941}
   - component: {fileID: 6171068732221415080}
-  - component: {fileID: 6670298966495623452}
   - component: {fileID: 689529762165013991}
+  - component: {fileID: 377197122675698767}
   m_Layer: 0
   m_Name: AITankBrown
   m_TagString: AI
@@ -182,28 +182,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -7.1445317, y: 0, z: 3.9663105}
     m_Extent: {x: 7.0849614, y: 10.054693, z: 15.7251}
   m_DirtyAABB: 0
---- !u!195 &6670298966495623452
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3434008483057092561}
-  m_Enabled: 1
-  m_AgentTypeID: -1372625422
-  m_Radius: 31.3
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 16.3
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!135 &689529762165013991
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -225,6 +203,31 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 12
   m_Center: {x: 0, y: 8, z: 0}
+--- !u!114 &377197122675698767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3434008483057092561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8942cd1701000408b7740503ad98e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 0
+  rotSpeed: 40
+  bulletSpeed: 10
+  bulletRicochetMax: 0
+  currentBullets: 0
+  maxBullets: 1
+  fireRate: 3
+  mineRate: 0
+  explosionPrefab: {fileID: 1000012903210382, guid: fdc7727355b657843a3323f7c169535e, type: 3}
+  bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}
+  minePrefab: {fileID: 5508740373293996974, guid: 97a1272a67022d04e9161ed19777b248, type: 3}
+  leftTrailRenderer: {fileID: 0}
+  rightTrailRenderer: {fileID: 0}
 --- !u!1 &8313792355909824392
 GameObject:
   m_ObjectHideFlags: 0

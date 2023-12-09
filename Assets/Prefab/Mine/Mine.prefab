@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 8373040426353867378}
   - component: {fileID: 7971655714084232981}
   - component: {fileID: -1371074044269099467}
+  - component: {fileID: 465684312974914767}
   m_Layer: 7
   m_Name: Mine
-  m_TagString: Untagged
+  m_TagString: Mine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123,3 +124,22 @@ MonoBehaviour:
   explosionParticlePrefab: {fileID: 1000012903210382, guid: 48c4b163929a91345b495a370248b520, type: 3}
   parentTank: {fileID: 0}
   explosionScale: 4
+--- !u!114 &465684312974914767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5508740373293996974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 3
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: f2652fae

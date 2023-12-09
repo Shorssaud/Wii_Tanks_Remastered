@@ -30,7 +30,6 @@ public class BulletBase : MonoBehaviour
         transform.position += vel * speed * Time.deltaTime;
     }
 
-
     void OnCollisionEnter(Collision collision)
     {
         // if it collides with a tank, destroy the bullet and the tank unless it is the tank that fired the bullet
@@ -39,6 +38,12 @@ public class BulletBase : MonoBehaviour
             Destroy(gameObject);
             float explosionSize = 3.0f;
             collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
+            if (collision.gameObject.tag == "AI")
+            {
+                int currentScore = PlayerPrefs.GetInt("TotalScore");
+                PlayerPrefs.SetInt("TotalScore", currentScore + 1);
+                PlayerPrefs.Save();
+            }
         }
 
         // if the bullet collides with a bullet, destroy both bullets
