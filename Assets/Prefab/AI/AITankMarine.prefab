@@ -5344,13 +5344,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e973e09424358644381afe458595a8d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 10
-  rotSpeed: 20
+  maxSpeed: 7.5
+  rotSpeed: 270
   bulletSpeed: 30
   bulletRicochetMax: 0
   currentBullets: 0
   maxBullets: 1
-  fireRate: 0.5
+  fireRate: 1
   mineRate: 0
   explosionPrefab: {fileID: 1000012903210382, guid: fdc7727355b657843a3323f7c169535e, type: 3}
   bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}

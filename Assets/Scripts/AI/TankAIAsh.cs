@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
@@ -36,8 +37,6 @@ public class TankAIAsh : Tank
     // Update is called once per frame
     void Update()
     {
-        // draw a sphere at the destination
-        Debug.DrawLine(transform.position, transform.position + agent.desiredVelocity * 3, Color.red);
         // change the desired velocity into a horizontal and vertical input
         horizontal = agent.desiredVelocity.x / maxSpeed;
         vertical = agent.desiredVelocity.z / maxSpeed;
@@ -56,33 +55,18 @@ public class TankAIAsh : Tank
             Vector3 dirAwayFromPlayer = transform.position - player.transform.position;
             currentDest = transform.position + dirAwayFromPlayer.normalized * minDistance;
 
-            // Check for nearby mines
-            Collider[] mines = Physics.OverlapSphere(transform.position, 20, LayerMask.GetMask("Mine"));
-
-            if (mines.Length > 0)
-            {
-                // Avoid mines by finding a safe direction to move
-                foreach (Collider mine in mines)
-                {
-                    Vector3 dirToMine = mine.transform.position - transform.position;
-                    currentDest += dirToMine.normalized * 50;
-                }
-            }
-            print("player");
             // Move towards the new position while avoiding mines
             agent.SetDestination(currentDest);
         }
         else
         {
+
             Vector3 playerPosition = player.transform.position;
 
             // Update the destination towards the player with some randomness
             Vector3 randomOffset = Random.insideUnitSphere * randRad;
             currentDest = playerPosition + randomOffset;
             agent.SetDestination(currentDest);
-
-            // Move towards the random destination while avoiding mines
-            //agent.SetDestination(currentDest);
         }
     }
 
@@ -120,18 +104,21 @@ public class TankAIAsh : Tank
 
     private bool HasLineOfSightToPlayer()
     {
-        RaycastHit hit;
         Vector3 direction = player.transform.position - cannon.position;
+        RaycastHit hit;
 
-        if (Physics.Raycast(cannon.position, direction, out hit))
+        // Calculate the bullet size/radius (assuming spherical for illustration)
+        float bulletRadius = bulletPrefab.GetComponent<Collider>().bounds.extents.magnitude;
+
+        if (Physics.SphereCast(cannon.position, bulletRadius, direction, out hit))
         {
-            // Check if the raycast hits the player
+            // Check if the spherecast hits the player
             if (hit.collider.tag == "Player")
             {
                 return true; // Line of sight is clear, player is hit directly
             }
 
-            // Check if the raycast hits a wall
+            // Check if the spherecast hits a wall
             if (hit.collider.tag == "Wall")
             {
                 return false; // Line of sight is blocked by a wall

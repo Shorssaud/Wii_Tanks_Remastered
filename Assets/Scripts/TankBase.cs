@@ -9,11 +9,13 @@ public class Tank : MonoBehaviour
     public float rotSpeed;
     public float bulletSpeed;
     public int bulletRicochetMax;
-    public int currentBullets;
     public int maxBullets;
+    public int maxMines;
     public float fireRate;
     public float mineRate;
 
+    private int currentBullets;
+    private int currentMines;
     private float nextFire;
     private float nextMine;
     private int shotPause;
@@ -177,7 +179,7 @@ public class Tank : MonoBehaviour
     // Places a mine at the position of the tank
     protected void PlaceMine()
     {
-        if (nextMine > 0)
+        if (nextMine > 0 || currentMines >= maxMines)
             return;
         // If the tank is in a wall, don't place a mine
         if (Physics.CheckBox(transform.position, transform.localScale / 2, transform.rotation, LayerMask.GetMask("Default")))
@@ -202,6 +204,9 @@ public class Tank : MonoBehaviour
         //set the parent tank
         mine.GetComponent<Mine>().parentTank = gameObject;
 
+        // increase mine count
+        currentMines++;
+
         // reset mine timer
         nextMine = mineRate;
     }
@@ -210,6 +215,11 @@ public class Tank : MonoBehaviour
     public void RemoveBullet()
     {
         currentBullets -= 1;
+    }
+
+    public void RemoveMine()
+    {
+        currentMines -= 1;
     }
 
     virtual public void DestroyTank(float explosionSize = 1.0f)
