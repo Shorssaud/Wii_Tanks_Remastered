@@ -15,6 +15,7 @@ public class DisplayTransition : MonoBehaviour
         {
             levelText.text = "Mission " + PlayerPrefs.GetInt("Level").ToString();
         }
+        GameObject.Find("UILifeLeft").GetComponent<TextMeshProUGUI>().text = "x " + PlayerPrefs.GetInt("Lives").ToString();
     }
 
     void Update()
