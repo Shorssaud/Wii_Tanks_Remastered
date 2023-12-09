@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
             else {
                 PlayerPrefs.SetInt("Level", newLevel);
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/Transition");
+
+                FindObjectOfType<AudioManager>().PauseEverything();
+                FindObjectOfType<AudioManager>().Play("Round Start");
             }
         }
     }

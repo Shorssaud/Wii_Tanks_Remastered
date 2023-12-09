@@ -7,13 +7,15 @@ public class TankAIMarine: Tank
 {
     private GameObject player;
     private NavMeshAgent agent;
-    private float stationaryTime = 0f;
-    private float movementDecisionInterval = 2f;
+    private float movementDecisionInterval = 0.7f;
     private Quaternion currentCannonRot;
 
     private Transform cannon;
     private Transform bulletSpawn;
-
+    private Vector3 currentDest;
+    float horizontal = 0;
+    float vertical = 0;
+    int randRad = 40;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,42 +27,44 @@ public class TankAIMarine: Tank
         currentCannonRot = cannon.rotation;
 
         agent.speed = maxSpeed;
+        InvokeRepeating("MovementDecision", 0f, movementDecisionInterval);
+        agent.updatePosition = true;
+        agent.updateRotation = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // change the desired velocity into a horizontal and vertical input
+        horizontal = agent.desiredVelocity.x / maxSpeed;
+        vertical = agent.desiredVelocity.z / maxSpeed;
+        Move(horizontal, vertical);
         AimAndShoot();
-        MovementDecision();
-        stationaryTime += Time.deltaTime;
     }
 
     private void MovementDecision()
     {
-        // Decide whether to move or stay stationary
-        if (stationaryTime > movementDecisionInterval)
+        // Move towards the player but stay a minimum distance away
+        float minDistance = 40f;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        if (distanceToPlayer < minDistance)
         {
-            int minDistance = 40;
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-            print(distanceToPlayer);
-            if (distanceToPlayer < minDistance)
-            {
-                // Calculate a direction away from the player
-                Vector3 dirAwayFromPlayer = transform.position - player.transform.position;
-                Vector3 newPosition = transform.position + dirAwayFromPlayer.normalized * minDistance;
+            // Calculate a direction away from the player
+            Vector3 dirAwayFromPlayer = transform.position - player.transform.position;
+            currentDest = transform.position + dirAwayFromPlayer.normalized * minDistance;
 
-                // Move the tank to the new position using NavMeshAgent
-                agent.SetDestination(newPosition);
-            }
-            else
-            {
-                if (agent.remainingDistance < 1f)
-                {
-                    // If the tank is already at the destination, set a new random destination
-                    Vector3 randomDestination = Random.insideUnitSphere * 100;
-                    agent.SetDestination(randomDestination);
-                }
-            }
+            // Move towards the new position while avoiding mines
+            agent.SetDestination(currentDest);
+        }
+        else
+        {
+
+            Vector3 playerPosition = player.transform.position;
+
+            // Update the destination towards the player with some randomness
+            Vector3 randomOffset = Random.insideUnitSphere * randRad;
+            currentDest = playerPosition + randomOffset;
+            agent.SetDestination(currentDest);
         }
     }
 
@@ -85,7 +89,7 @@ public class TankAIMarine: Tank
         currentCannonRot = cannon.rotation;
 
         // Check if the tank y rotation is roughly facing the player before shooting
-        if (Vector3.Angle(cannon.forward, directionToPlayer) < 5f)
+        if (Vector3.Angle(cannon.forward, directionToPlayer) < 10f)
         {
             // Check for line of sight
             if (HasLineOfSightToPlayer())
@@ -98,18 +102,21 @@ public class TankAIMarine: Tank
 
     private bool HasLineOfSightToPlayer()
     {
-        RaycastHit hit;
         Vector3 direction = player.transform.position - cannon.position;
+        RaycastHit hit;
 
-        if (Physics.Raycast(cannon.position, direction, out hit))
+        // Calculate the bullet size/radius (assuming spherical for illustration)
+        float bulletRadius = bulletPrefab.GetComponent<Collider>().bounds.extents.magnitude;
+
+        if (Physics.SphereCast(cannon.position, bulletRadius, direction, out hit))
         {
-            // Check if the raycast hits the player
+            // Check if the spherecast hits the player
             if (hit.collider.tag == "Player")
             {
                 return true; // Line of sight is clear, player is hit directly
             }
 
-            // Check if the raycast hits a wall
+            // Check if the spherecast hits a wall
             if (hit.collider.tag == "Wall")
             {
                 return false; // Line of sight is blocked by a wall

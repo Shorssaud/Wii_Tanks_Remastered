@@ -218,7 +218,7 @@ MonoBehaviour:
   maxSpeed: 0
   rotSpeed: 40
   bulletSpeed: 10
-  bulletRicochetMax: 0
+  bulletRicochetMax: 1
   currentBullets: 0
   maxBullets: 1
   fireRate: 3

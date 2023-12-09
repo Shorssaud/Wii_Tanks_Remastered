@@ -8,16 +8,12 @@ public class TankAIYellow : Tank
 {
     private GameObject player;
     private NavMeshAgent agent;
-    private float movementDecisionInterval = 0.4f;
+    private float movementDecisionInterval = 2f;
     private Quaternion currentCannonRot;
 
     private Transform cannon;
     private Transform bulletSpawn;
-
-    private float avoidanceDistance = 30f;
-    private LayerMask mineLayer;
-    private LayerMask aiLayer;
-    private float edgeBiasDistance = 15f;
+    private Vector3 currentDest;
     float horizontal = 0;
     float vertical = 0;
 
@@ -33,50 +29,48 @@ public class TankAIYellow : Tank
         currentCannonRot = cannon.rotation;
 
         agent.speed = maxSpeed;
-        agent.acceleration = 10;
         InvokeRepeating("MovementDecision", 0f, movementDecisionInterval);
-        mineLayer = LayerMask.GetMask("Mine");
-        aiLayer = LayerMask.GetMask("AI");
-
+        agent.updatePosition = true;
+        agent.updateRotation = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        horizontal = agent.desiredVelocity.x / maxSpeed;
+        vertical = agent.desiredVelocity.z / maxSpeed;
         Move(horizontal, vertical);
         AimAndShoot();
     }
 
     private void MovementDecision()
     {
+        int i = 0;
+        float minDistance = 30f;
+
+        Vector3 randomDirection = Random.insideUnitSphere * 100;
+        randomDirection += player.transform.position; // Add player's position to random direction
         NavMeshHit hit;
-        Vector3 randomDirection;
 
-        if (NavMesh.SamplePosition(transform.position, out hit, avoidanceDistance, NavMesh.AllAreas))
+        // Continuously try sampling positions until a valid position with minimum distance is found
+        while (i < 5)
         {
-            float distanceToEdge = Vector3.Distance(transform.position, hit.position);
+            i++;
+            NavMesh.SamplePosition(randomDirection, out hit, 100, NavMesh.AllAreas);
+            Vector3 sampledPosition = new Vector3(hit.position.x, 0, hit.position.z);
 
-            if (distanceToEdge > edgeBiasDistance)
+            // Check the distance between sampled position and player
+            if (Vector3.Distance(sampledPosition, player.transform.position) >= minDistance)
             {
-                // Apply bias towards the center when near the edge
-                randomDirection = (hit.position - transform.position).normalized * (avoidanceDistance - distanceToEdge);
+                agent.SetDestination(sampledPosition);
+                break; // Exit the loop when a valid position is found
             }
             else
             {
-                // Normal random direction calculation
-                randomDirection = Random.insideUnitSphere * avoidanceDistance;
+                // Recalculate a new random direction for sampling
+                randomDirection = Random.insideUnitSphere * 100;
+                randomDirection += player.transform.position;
             }
-
-            // Sample position within the NavMesh
-            randomDirection += transform.position;
-
-            NavMesh.SamplePosition(randomDirection, out hit, avoidanceDistance, NavMesh.AllAreas);
-            Vector3 currentMoveTarget = new Vector3(hit.position.x, 0, hit.position.z);
-            horizontal = (currentMoveTarget.x - transform.position.x) / 10f;
-            vertical = (currentMoveTarget.z - transform.position.z) / 10f;
-            // round this to 1, 0, or -1
-            horizontal = Mathf.Round(horizontal);
-            vertical = Mathf.Round(vertical);
         }
     }
 
@@ -84,10 +78,21 @@ public class TankAIYellow : Tank
     private void AimAndShoot()
     {
         // check if there are any ai tanks nearby by using a collision sphere
+        cannon.rotation = currentCannonRot; //Always keep the cannon facing the desired direction
+        Vector3 directionToPlayer = player.transform.position - transform.position; // Get direction to player
+        directionToPlayer.y = 0; // Ignore vertical difference
+        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer); // Create a quaternion (rotation) based on looking down the vector from the ai to the player
+        Vector3 currentRotation = cannon.rotation.eulerAngles; // Extract current rotation angles
+
+        // Rotate turret slowly towards player only on the Y axis
+        cannon.rotation = Quaternion.Euler(currentRotation.x,
+                                           Quaternion.RotateTowards(cannon.rotation, lookRotation, rotSpeed * Time.deltaTime).eulerAngles.y,
+                                           currentRotation.z);
+        currentCannonRot = cannon.rotation;
         Collider[] colliders = Physics.OverlapSphere(transform.position, 10f);
         foreach (Collider collider in colliders)
         {
-            if (collider.tag == "AI" && collider.gameObject != gameObject)
+            if ((collider.tag == "AI" && collider.gameObject != gameObject) || collider.tag == "Mine")
             {
                 return;
             }
@@ -95,27 +100,4 @@ public class TankAIYellow : Tank
         PlaceMine();
     }
 
-
-    private bool HasLineOfSightToPlayer()
-    {
-        RaycastHit hit;
-        Vector3 direction = player.transform.position - cannon.position;
-
-        if (Physics.Raycast(cannon.position, direction, out hit))
-        {
-            // Check if the raycast hits the player
-            if (hit.collider.tag == "Player")
-            {
-                return true; // Line of sight is clear, player is hit directly
-            }
-
-            // Check if the raycast hits a wall
-            if (hit.collider.tag == "Wall")
-            {
-                return false; // Line of sight is blocked by a wall
-            }
-        }
-
-        return false; // Line of sight is not clear
-    }
 }

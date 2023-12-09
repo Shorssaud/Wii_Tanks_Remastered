@@ -241,7 +241,7 @@ NavMeshAgent:
   m_Radius: 30
   m_Speed: 0
   m_Acceleration: 0
-  avoidancePriority: 50
+  avoidancePriority: 20
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -263,10 +263,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2deb8899845dd943916b91a40117c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 10
+  maxSpeed: 7.5
   rotSpeed: 270
-  bulletSpeed: 10
-  bulletRicochetMax: 0
+  bulletSpeed: 20
+  bulletRicochetMax: 1
   currentBullets: 0
   maxBullets: 1
   fireRate: 1
