@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void checkLose()
     {
-        if (lives <= 0) UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        if (lives <= 0) UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/LoseMenu");
     }
     private void checkWin()
     {
