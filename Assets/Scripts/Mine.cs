@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 public class Mine : MonoBehaviour
 {
-    public float speed;
     public float timer = 10.0f;
 
     public GameObject explosionParticlePrefab;
@@ -33,7 +32,7 @@ public class Mine : MonoBehaviour
     }
 
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
         print(collision.gameObject.tag);    
         // if the creater of the mine collides with it, ignore the collision
