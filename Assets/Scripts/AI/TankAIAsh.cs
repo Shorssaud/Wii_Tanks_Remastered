@@ -16,6 +16,7 @@ public class TankAIAsh : Tank
     private Vector3 currentDest;
     float horizontal = 0;
     float vertical = 0;
+    int randRad = 40;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +29,7 @@ public class TankAIAsh : Tank
 
         agent.speed = maxSpeed;
         InvokeRepeating("MovementDecision", 0f, movementDecisionInterval);
-        agent.updatePosition = false;
+        agent.updatePosition = true;
         agent.updateRotation = false;
     }
 
@@ -36,7 +37,7 @@ public class TankAIAsh : Tank
     void Update()
     {
         // draw a sphere at the destination
-        Debug.DrawLine(transform.position, currentDest, Color.red);
+        Debug.DrawLine(transform.position, transform.position + agent.desiredVelocity * 3, Color.red);
         // change the desired velocity into a horizontal and vertical input
         horizontal = agent.desiredVelocity.x / maxSpeed;
         vertical = agent.desiredVelocity.z / maxSpeed;
@@ -54,18 +55,35 @@ public class TankAIAsh : Tank
             // Calculate a direction away from the player
             Vector3 dirAwayFromPlayer = transform.position - player.transform.position;
             currentDest = transform.position + dirAwayFromPlayer.normalized * minDistance;
+
+            // Check for nearby mines
+            Collider[] mines = Physics.OverlapSphere(transform.position, 20, LayerMask.GetMask("Mine"));
+
+            if (mines.Length > 0)
+            {
+                // Avoid mines by finding a safe direction to move
+                foreach (Collider mine in mines)
+                {
+                    Vector3 dirToMine = mine.transform.position - transform.position;
+                    currentDest += dirToMine.normalized * 50;
+                }
+            }
+            print("player");
+            // Move towards the new position while avoiding mines
+            agent.SetDestination(currentDest);
         }
         else
         {
-            // If the tank is already at the destination, set a new random destination
-            Vector3 randomDestination = Random.insideUnitSphere * 5;
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomDestination, out hit, 100, NavMesh.AllAreas))
-            {
-                currentDest = hit.position;
-            }
+            Vector3 playerPosition = player.transform.position;
+
+            // Update the destination towards the player with some randomness
+            Vector3 randomOffset = Random.insideUnitSphere * randRad;
+            currentDest = playerPosition + randomOffset;
+            agent.SetDestination(currentDest);
+
+            // Move towards the random destination while avoiding mines
+            //agent.SetDestination(currentDest);
         }
-        agent.SetDestination(currentDest);
     }
 
     // This function can be changed to make the AI tank aim and shoot differently

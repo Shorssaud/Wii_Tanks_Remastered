@@ -14,8 +14,6 @@ public class Mine : MonoBehaviour
     // store the parent tank
     public GameObject parentTank;
 
-    private bool isArmed = false;
-
     public float explosionScale = 1.0f; // Default scale is 1.0
 
     // Start is called before the first frame update
@@ -36,27 +34,31 @@ public class Mine : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        print(collision.gameObject.tag);    
         // if the creater of the mine collides with it, ignore the collision
         if (collision.gameObject == parentTank)
         {
             return;
         }
-        Destroy(gameObject);
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "AI" || collision.gameObject.tag == "Bullet")
+        {
+            BlowUp();
+            Destroy(gameObject);
+        }
     }
 
-private void OnDestroy()
-{
+    private void BlowUp()
+    {
+    // Instantiate explosion at the point of collision
+    if (explosionParticlePrefab != null)
+    {
+        GameObject explosion = Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
+        explosion.transform.localScale *= explosionScale; // Scale the explosion effect
+    }
     // Check in a sphere around the mine for tanks, bullets, and breakable walls
     Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10.0f);
     foreach (Collider c in hitColliders)
     {
-        // Instantiate explosion at the point of collision
-        if (explosionParticlePrefab != null)
-        {
-            GameObject explosion = Instantiate(explosionParticlePrefab, transform.position, Quaternion.identity);
-            explosion.transform.localScale *= explosionScale; // Scale the explosion effect
-        }
-
         // Handle destruction of tanks, bullets, and breakable walls
         if (c.gameObject.tag == "AI" || c.gameObject.tag == "Player")
         {
@@ -69,7 +71,7 @@ private void OnDestroy()
         else if (c.gameObject.tag == "WallBreakable")
         {
 
-                Destroy(c.gameObject);
+            Destroy(c.gameObject);
         }
     }
 }
