@@ -67,9 +67,6 @@ public class TankAIAsh : Tank
             Vector3 randomOffset = Random.insideUnitSphere * randRad;
             currentDest = playerPosition + randomOffset;
             agent.SetDestination(currentDest);
-
-            // Move towards the random destination while avoiding mines
-            //agent.SetDestination(currentDest);
         }
     }
 
@@ -107,18 +104,21 @@ public class TankAIAsh : Tank
 
     private bool HasLineOfSightToPlayer()
     {
-        RaycastHit hit;
         Vector3 direction = player.transform.position - cannon.position;
+        RaycastHit hit;
 
-        if (Physics.Raycast(cannon.position, direction, out hit))
+        // Calculate the bullet size/radius (assuming spherical for illustration)
+        float bulletRadius = bulletPrefab.GetComponent<Collider>().bounds.extents.magnitude;
+
+        if (Physics.SphereCast(cannon.position, bulletRadius, direction, out hit))
         {
-            // Check if the raycast hits the player
+            // Check if the spherecast hits the player
             if (hit.collider.tag == "Player")
             {
                 return true; // Line of sight is clear, player is hit directly
             }
 
-            // Check if the raycast hits a wall
+            // Check if the spherecast hits a wall
             if (hit.collider.tag == "Wall")
             {
                 return false; // Line of sight is blocked by a wall

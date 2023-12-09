@@ -168,8 +168,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1372625422
   m_Radius: 31.67
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 0
+  m_Acceleration: 0
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 12.25
@@ -213,12 +213,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97dce633839561541a1efe45a3eb5303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 40
-  rotSpeed: 40
+  maxSpeed: 20
+  rotSpeed: 270
   bulletSpeed: 0
   bulletRicochetMax: 0
-  currentBullets: 0
   maxBullets: 0
+  maxMines: 4
   fireRate: 0
   mineRate: 5
   explosionPrefab: {fileID: 1000012903210382, guid: fdc7727355b657843a3323f7c169535e, type: 3}
