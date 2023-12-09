@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
@@ -36,8 +37,6 @@ public class TankAIAsh : Tank
     // Update is called once per frame
     void Update()
     {
-        // draw a sphere at the destination
-        Debug.DrawLine(transform.position, transform.position + agent.desiredVelocity * 3, Color.red);
         // change the desired velocity into a horizontal and vertical input
         horizontal = agent.desiredVelocity.x / maxSpeed;
         vertical = agent.desiredVelocity.z / maxSpeed;
@@ -56,24 +55,12 @@ public class TankAIAsh : Tank
             Vector3 dirAwayFromPlayer = transform.position - player.transform.position;
             currentDest = transform.position + dirAwayFromPlayer.normalized * minDistance;
 
-            // Check for nearby mines
-            Collider[] mines = Physics.OverlapSphere(transform.position, 20, LayerMask.GetMask("Mine"));
-
-            if (mines.Length > 0)
-            {
-                // Avoid mines by finding a safe direction to move
-                foreach (Collider mine in mines)
-                {
-                    Vector3 dirToMine = mine.transform.position - transform.position;
-                    currentDest += dirToMine.normalized * 50;
-                }
-            }
-            print("player");
             // Move towards the new position while avoiding mines
             agent.SetDestination(currentDest);
         }
         else
         {
+
             Vector3 playerPosition = player.transform.position;
 
             // Update the destination towards the player with some randomness

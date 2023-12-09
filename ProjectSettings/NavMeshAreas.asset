@@ -12,9 +12,9 @@ NavMeshProjectSettings:
   - name: Jump
     cost: 2
   - name: Mine
-    cost: 1
+    cost: 10
   - name: Bullet
-    cost: 1
+    cost: 10
   - name: 
     cost: 1
   - name: 
@@ -91,7 +91,7 @@ NavMeshProjectSettings:
       m_Flags: 0
   - serializedVersion: 3
     agentTypeID: -1372625422
-    agentRadius: 1
+    agentRadius: 4.5
     agentHeight: 2
     agentSlope: 0
     agentClimb: 0.001

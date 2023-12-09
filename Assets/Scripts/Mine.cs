@@ -34,7 +34,6 @@ public class Mine : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        print(collision.gameObject.tag);    
         // if the creater of the mine collides with it, ignore the collision
         if (collision.gameObject == parentTank)
         {
