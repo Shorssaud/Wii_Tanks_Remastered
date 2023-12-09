@@ -18,6 +18,7 @@ public class MainMenu : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/Transition");
         FindObjectOfType<AudioManager>().PauseEverything();
         FindObjectOfType<AudioManager>().Play("MenuSelection");
+        FindObjectOfType<AudioManager>().Play("Round Start");
     }
 
     public void Options()
