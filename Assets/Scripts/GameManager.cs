@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private int lives;
     public TankPlayer player;
 
     void Start()
     {
-        lives = player.GetLives();
     }
 
     void Update()
@@ -20,8 +18,14 @@ public class GameManager : MonoBehaviour
 
     private void checkLose()
     {
-        if (lives <= 0) UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/LoseMenu");
+        if (GameObject.FindGameObjectsWithTag("Player").Length == 0) {
+            Debug.Log("CheckLose");
+            player.RemoveLife();
+            if (player.GetLives() <= 0) UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/LoseMenu");
+            else UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/Transition");
+        }
     }
+
     private void checkWin()
     {
         if (GameObject.FindGameObjectsWithTag("AI").Length == 0) {
