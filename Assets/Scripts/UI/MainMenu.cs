@@ -10,8 +10,8 @@ public class MainMenu : MonoBehaviour
     }
     public void PlayGame()
     {
-        // Load the scene named "BaseGame"
-        UnityEngine.SceneManagement.SceneManager.LoadScene("BaseGame");
+        PlayerPrefs.SetInt("Level", 1);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(5);
     }
 
     public void Options()
