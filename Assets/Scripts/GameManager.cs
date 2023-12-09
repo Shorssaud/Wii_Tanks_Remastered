@@ -14,8 +14,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // checkLose();
-        Debug.Log(lives);
+        checkLose();
         checkWin();
     }
 

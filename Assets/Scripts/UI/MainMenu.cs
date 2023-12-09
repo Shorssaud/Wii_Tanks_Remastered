@@ -5,12 +5,13 @@ using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
     void Start(){
+        // TODO : Ajouter une condition pour vérifier qu'on est pas en mode 1 life
         PlayerPrefs.SetInt("Lives", 3);
     }
     public void PlayGame()
     {
-        // Load the scene named "BaseGame"
-        UnityEngine.SceneManagement.SceneManager.LoadScene("BaseGame");
+        PlayerPrefs.SetInt("Level", 1);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(5);
     }
 
     public void Options()
