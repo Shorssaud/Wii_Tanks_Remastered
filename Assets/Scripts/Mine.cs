@@ -29,7 +29,7 @@ public class Mine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isUnderAi)
+        if (isUnderAi && parentTank != null)
         {
             //check if the parent tank is still colliding with the mine
             if (!parentTank.GetComponent<Collider>().bounds.Contains(transform.position))
@@ -54,7 +54,7 @@ public class Mine : MonoBehaviour
     void OnTriggerEnter(Collider collision)
     {
         // if the creater of the mine collides with it, ignore the collision
-        if (collision.gameObject == parentTank)
+        if (parentTank != null && collision.gameObject == parentTank)
         {
             return;
         }
@@ -96,6 +96,9 @@ public class Mine : MonoBehaviour
                 Destroy(c.gameObject);
             }
         }
-        parentTank.GetComponent<Tank>().RemoveMine();
+        if (parentTank != null)
+        {
+            parentTank.GetComponent<Tank>().RemoveMine();
+        }
     }
 }
