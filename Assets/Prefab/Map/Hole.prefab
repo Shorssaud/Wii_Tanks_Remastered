@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3361472781007239528}
   - component: {fileID: 3807182500916274910}
   - component: {fileID: 3370357277197719903}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Plane (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3174628194160073690}
   - component: {fileID: 6221229224697377966}
   - component: {fileID: 7806799755384734296}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,8 +175,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1734983643311411390}
-  - component: {fileID: 5544286223245252831}
-  m_Layer: 0
+  - component: {fileID: 7001486565042108955}
+  - component: {fileID: 9133994829559326344}
+  m_Layer: 11
   m_Name: Hole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,14 +195,30 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -81.05606, y: 4.7196484, z: 0.5431862}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3174628194160073690}
   - {fileID: 3361472781007239528}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &5544286223245252831
-CapsuleCollider:
+--- !u!208 &7001486565042108955
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334956822514415552}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 1, y: 0.455, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
+--- !u!135 &9133994829559326344
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -215,11 +232,9 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2.98
-  m_Height: 17.45
-  m_Direction: 1
-  m_Center: {x: 35.15, y: 1.21, z: 9.32}
+  serializedVersion: 3
+  m_Radius: 2.82
+  m_Center: {x: 0, y: -1, z: 0}

@@ -17,6 +17,7 @@ public class DisplayTransition : MonoBehaviour
         {
             levelText.text = "Mission " + PlayerPrefs.GetInt("Level").ToString();
         }
+        Debug.Log(PlayerPrefs.GetInt("Lives").ToString());
         GameObject.Find("UILifeLeft").GetComponent<TextMeshProUGUI>().text = "x " + PlayerPrefs.GetInt("Lives").ToString();
 
         gamepad = Gamepad.current; // Initialize the gamepad

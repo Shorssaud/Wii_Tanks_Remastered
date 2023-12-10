@@ -174,6 +174,8 @@ public class Tank : MonoBehaviour
 
         // reset firing timer
         nextFire = fireRate;
+
+        FindObjectOfType<AudioManager>().Play("TankShot");
     }
 
     // Places a mine at the position of the tank

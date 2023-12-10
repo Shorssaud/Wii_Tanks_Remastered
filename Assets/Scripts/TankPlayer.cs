@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -69,36 +67,36 @@ public class TankPlayer : Tank
         CannonTracer();
     }
 
-private void CannonTracer()
-{
-    int floorLayerMask = 1 << LayerMask.NameToLayer("Floor");
-
-    if (cursor != null)
+    private void CannonTracer()
     {
-        Ray camRay = mainCamera.ScreenPointToRay(mainCamera.WorldToScreenPoint(cursor.transform.position));
-        lastRay = camRay;
+        int floorLayerMask = 1 << LayerMask.NameToLayer("Floor");
 
-        if (Physics.Raycast(camRay, out RaycastHit floorHit, 1000f, floorLayerMask))
+        if (cursor != null)
         {
-            didHit = true;
-            lastHit = floorHit;
+            Ray camRay = mainCamera.ScreenPointToRay(mainCamera.WorldToScreenPoint(cursor.transform.position));
+            lastRay = camRay;
 
-            Vector3 playerToMouse = floorHit.point - cannon.position;
-            playerToMouse.y = 10f; // Ensure the vector is entirely along the floor plane
+            if (Physics.Raycast(camRay, out RaycastHit floorHit, 1000f, floorLayerMask))
+            {
+                didHit = true;
+                lastHit = floorHit;
 
-            Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-            float yRotation = newRotation.eulerAngles.y;
+                Vector3 playerToMouse = floorHit.point - cannon.position;
+                playerToMouse.y = 10f; // Ensure the vector is entirely along the floor plane
 
-            // Set the cannon's rotation
-            // Preserve the current X and Z rotations, only change the Y rotation
-            cannon.rotation = Quaternion.Euler(cannon.rotation.eulerAngles.x, yRotation, cannon.rotation.eulerAngles.z);
-        }
-        else
-        {
-            didHit = false;
+                Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
+                float yRotation = newRotation.eulerAngles.y;
+
+                // Set the cannon's rotation
+                // Preserve the current X and Z rotations, only change the Y rotation
+                cannon.rotation = Quaternion.Euler(cannon.rotation.eulerAngles.x, yRotation, cannon.rotation.eulerAngles.z);
+            }
+            else
+            {
+                didHit = false;
+            }
         }
     }
-}
 
 
     void OnDrawGizmos()
@@ -153,5 +151,11 @@ private void CannonTracer()
     {
         PlayerPrefs.SetInt("TotalScore", 0);
         PlayerPrefs.SetInt("Lives", 3);
+    }
+
+    public override void DestroyTank(float explosionSize = 1)
+    {
+        FindObjectOfType<AudioManager>().Play("Explosion");
+        base.DestroyTank(explosionSize);
     }
 }
