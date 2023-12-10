@@ -8,8 +8,6 @@ public class GameManager : MonoBehaviour
     private GameObject loseMessage;
     private GameObject winMessage;
 
-    private bool isLoose;
-
     void Start()
     {
         loseMessage = GameObject.Find("Destroyed");
