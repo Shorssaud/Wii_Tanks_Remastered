@@ -1,7 +1,6 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 
 // This class can be used as a reference for other AI tanks
