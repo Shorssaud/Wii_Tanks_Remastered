@@ -44,6 +44,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615fa84cc5af33b488b906111e6880a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  loseMessage: {fileID: 0}
-  winMessage: {fileID: 0}

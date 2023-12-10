@@ -12,6 +12,7 @@ public class DisplayStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Score : " + PlayerPrefs.GetInt("TotalScore").ToString());
         TextMeshProUGUI scoreText = scoreObject.GetComponent<TextMeshProUGUI>();
         if (scoreText != null)
         {
