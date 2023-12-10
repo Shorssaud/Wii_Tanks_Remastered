@@ -41,6 +41,7 @@ public class BulletBase : MonoBehaviour
             collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
             if (collision.gameObject.tag == "AI")
             {
+                FindObjectOfType<AudioManager>().Play("Explosion");
                 int currentScore = PlayerPrefs.GetInt("TotalScore");
                 PlayerPrefs.SetInt("TotalScore", currentScore + 1);
                 PlayerPrefs.Save();
@@ -59,6 +60,7 @@ public class BulletBase : MonoBehaviour
         {
             if (ricochetCount < ricochetMax)
             {
+                FindObjectOfType<AudioManager>().Play("Ricochet");
                 if (ricochetParticlePrefab != null)
                 {
                     Instantiate(ricochetParticlePrefab, transform.position, Quaternion.identity);
