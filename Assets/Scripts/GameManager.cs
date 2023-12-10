@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     private GameObject loseMessage;
     private GameObject winMessage;
+    private bool onTransition = false;
 
     void Start()
     {
@@ -24,7 +26,8 @@ public class GameManager : MonoBehaviour
 
     private void checkLose()
     {
-        if (GameObject.FindGameObjectsWithTag("Player").Length == 0) {
+        if (GameObject.FindGameObjectsWithTag("Player").Length == 0 && !onTransition) {
+            onTransition = true;
             //player.RemoveLife();
             if ((PlayerPrefs.GetInt("Lives") - 1) <= 0) StartCoroutine(LoseAndEnd());
             else StartCoroutine(LoseAndRetry());
@@ -33,10 +36,13 @@ public class GameManager : MonoBehaviour
 
     private void checkWin()
     {
-        if (GameObject.FindGameObjectsWithTag("AI").Length == 0) {
+        if (GameObject.FindGameObjectsWithTag("AI").Length == 0 && !onTransition) {
+            onTransition = true;
             int newLevel = PlayerPrefs.GetInt("Level") + 1;
-            // TODO : mettre à jour en fonction du nombre de niveaux
-            if (newLevel >= 3) StartCoroutine(WinAndEnd());
+            Debug.Log(newLevel);
+            string newLevelPath = "Scenes/Levels/Level" + newLevel;
+            Debug.Log(newLevelPath);
+            if (!IsSceneInBuildSettings(newLevelPath)) StartCoroutine(WinAndEnd());
             else {
                 PlayerPrefs.SetInt("Level", newLevel);
                 StartCoroutine(WinAndNext());
@@ -77,5 +83,18 @@ public class GameManager : MonoBehaviour
         //winMessage.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f); // Attendre 1 seconde
         UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/WinMenu");
+    }
+
+    bool IsSceneInBuildSettings(string sceneName)
+    {
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            if (scenePath.Contains(sceneName))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
