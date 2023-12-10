@@ -120,7 +120,6 @@ public class TankAIAsh : Tank
             // Check if the spherecast hits a wall
             if (hit.collider.tag == "Wall")
             {
-                print(hit.collider.name);
                 return false; // Line of sight is blocked by a wall
             }
         }
