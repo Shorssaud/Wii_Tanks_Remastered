@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4976434828915767412}
   - component: {fileID: 171207984379281560}
-  - component: {fileID: 603404050239931886}
+  - component: {fileID: 4550949694270492433}
   m_Layer: 0
   m_Name: WallBreakable6
   m_TagString: WallBreakable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4976434828915767412
 Transform:
@@ -57,25 +57,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.68, y: 5.68, z: 5.68}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &603404050239931886
-MonoBehaviour:
+--- !u!208 &4550949694270492433
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5702576374450084471}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OverrideArea: 1
-  m_Area: 1
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3, y: 7.135, z: 3}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 4.16, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &1175669312898570789
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -147,6 +144,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
       propertyPath: m_Name
       value: Bot
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7861854473326295642, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -230,6 +235,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Middle
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7861854473326295642, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -311,6 +324,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
       propertyPath: m_Name
       value: Top
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7861854473326295642, guid: 7a31c634409b5714d9b2de39d774a054, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

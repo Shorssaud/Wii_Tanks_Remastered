@@ -76,6 +76,7 @@ GameObject:
   - component: {fileID: 6171068732221415080}
   - component: {fileID: 689529762165013991}
   - component: {fileID: 377197122675698767}
+  - component: {fileID: 8758774039478478961}
   m_Layer: 0
   m_Name: AITankBrown
   m_TagString: AI
@@ -219,8 +220,8 @@ MonoBehaviour:
   rotSpeed: 40
   bulletSpeed: 10
   bulletRicochetMax: 1
-  currentBullets: 0
   maxBullets: 1
+  maxMines: 0
   fireRate: 3
   mineRate: 0
   explosionPrefab: {fileID: 1000012903210382, guid: fdc7727355b657843a3323f7c169535e, type: 3}
@@ -228,6 +229,25 @@ MonoBehaviour:
   minePrefab: {fileID: 5508740373293996974, guid: 97a1272a67022d04e9161ed19777b248, type: 3}
   leftTrailRenderer: {fileID: 0}
   rightTrailRenderer: {fileID: 0}
+--- !u!114 &8758774039478478961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3434008483057092561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &8313792355909824392
 GameObject:
   m_ObjectHideFlags: 0

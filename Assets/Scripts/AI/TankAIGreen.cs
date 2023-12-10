@@ -57,7 +57,7 @@ public class TankAIGreen : Tank
         {
             return; // If not, don't aim or shoot
         }
-        
+
         if (!ThinAngleSearch())
         {
             FanSearch();
@@ -69,8 +69,8 @@ public class TankAIGreen : Tank
         }
 
         Cannon.rotation = CurrentCannonRot; //Always keep the cannon facing the desired direction
-        // cast a ray in 16 directions which bounces off 2 walls
-        
+                                            // cast a ray in 16 directions which bounces off 2 walls
+
         // Rotate turret slowly towards player only on the Y axis
         Quaternion aimQuat = Quaternion.Euler(0, AimAngle, -90);
         Cannon.rotation = Quaternion.Euler(CurrentCannonRot.x,
@@ -89,12 +89,12 @@ public class TankAIGreen : Tank
     {
         // First check near last rotation angle with 2 casts
         Vector3 slightLeft = Quaternion.Euler(0, Cannon.rotation.eulerAngles.y + 70, 0) * transform.position;
-        Vector3 slightRight = Quaternion.Euler(0, Cannon.rotation.eulerAngles.y + 50 , 0) * transform.position;
+        Vector3 slightRight = Quaternion.Euler(0, Cannon.rotation.eulerAngles.y + 50, 0) * transform.position;
         int temp = SimulateBouncingRay(transform.position, Cannon.forward, bulletRicochetMax);
         int slres = SimulateBouncingRay(transform.position, slightLeft, bulletRicochetMax);
         int srres = SimulateBouncingRay(transform.position, slightRight, bulletRicochetMax);
-        
-        if (temp == 1) 
+
+        if (temp == 1)
         {
             AimAngle = Cannon.rotation.eulerAngles.y;
             return true;
@@ -162,8 +162,8 @@ public class TankAIGreen : Tank
         if (Physics.Raycast(origin, direction, out hit))
         {
             // Check if the ray hit the player
-                if (hit.collider.CompareTag("AI"))
-                    return 0;
+            if (hit.collider.CompareTag("AI"))
+                return 0;
             if (hit.collider.CompareTag("Player"))
             {
                 // Perform actions when the player is hit by the bouncing ray

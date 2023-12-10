@@ -229,6 +229,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1220560561260825317, guid: db94d9aa6b4197c4e9a7347695259597, type: 3}
+      propertyPath: m_Extents.x
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6293155993308470857, guid: db94d9aa6b4197c4e9a7347695259597, type: 3}
       propertyPath: m_Name
       value: WallBreakable2 (5)
@@ -3675,10 +3679,6 @@ SceneRoots:
   - {fileID: 1834848494}
   - {fileID: 790681431}
   - {fileID: 7369781927816635925}
-  - {fileID: 251122057}
-  - {fileID: 5143351856529901921}
-  - {fileID: 767456689}
-  - {fileID: 397395234}
   - {fileID: 64695211}
   - {fileID: 2107513386}
   - {fileID: 958427503}
