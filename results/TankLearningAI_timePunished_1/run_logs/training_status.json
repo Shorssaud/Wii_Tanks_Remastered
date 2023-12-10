@@ -1,0 +1,47 @@
+{
+    "TankLearningAI": {
+        "checkpoints": [
+            {
+                "steps": 4970,
+                "file_path": "results\\TankLearningAI_timePunished_1\\TankLearningAI\\TankLearningAI-4970.onnx",
+                "reward": null,
+                "creation_time": 1702204062.725705,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished_1\\TankLearningAI\\TankLearningAI-4970.pt"
+                ]
+            },
+            {
+                "steps": 9962,
+                "file_path": "results\\TankLearningAI_timePunished_1\\TankLearningAI\\TankLearningAI-9962.onnx",
+                "reward": null,
+                "creation_time": 1702204106.9541306,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished_1\\TankLearningAI\\TankLearningAI-9962.pt"
+                ]
+            },
+            {
+                "steps": 13220,
+                "file_path": "results\\TankLearningAI_timePunished_1\\TankLearningAI\\TankLearningAI-13220.onnx",
+                "reward": null,
+                "creation_time": 1702204141.5335665,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished_1\\TankLearningAI\\TankLearningAI-13220.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 13220,
+            "file_path": "results\\TankLearningAI_timePunished_1\\TankLearningAI.onnx",
+            "reward": null,
+            "creation_time": 1702204141.5335665,
+            "auxillary_file_paths": [
+                "results\\TankLearningAI_timePunished_1\\TankLearningAI\\TankLearningAI-13220.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.13.1+cpu"
+    }
+}

@@ -17,8 +17,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        checkLose();
-        checkWin();
+        /*checkLose();
+        checkWin();*/
     }
 
     private void checkLose()

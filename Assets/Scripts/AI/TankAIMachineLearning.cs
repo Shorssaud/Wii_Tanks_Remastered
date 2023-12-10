@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.MLAgents;
@@ -22,6 +24,7 @@ public class TankAIMachineLearning : Agent
     private Transform cannon;
     private Transform bulletSpawn;
     private Quaternion aimAngle;
+    Stopwatch stopwatch = new Stopwatch();
 
     // From TankBase
     public float maxSpeed;
@@ -59,14 +62,6 @@ public class TankAIMachineLearning : Agent
         aimAngle = currentCannonRot;
     }
 
-    ~TankAIMachineLearning()
-    {
-        Debug.Log("Tank was destroyed");
-        AddReward(-10.0f);
-        printReward();
-        EndEpisode();
-    }
-
     private void FixedUpdate()
     {
         nextFire -= Time.deltaTime; // Decrement the nextFire timer
@@ -75,12 +70,12 @@ public class TankAIMachineLearning : Agent
 
     public override void OnEpisodeBegin()
     {
-        
+        stopwatch.Reset();
+        stopwatch.Start();
         this.rb.angularVelocity = Vector3.zero;
         this.rb.velocity = Vector3.zero;
-
-        /*target.transform.position = GetRandomNavMeshPoint(target.transform.position);
-        this.transform.position = GetRandomNavMeshPoint(this.transform.position);*/
+        this.rb.rotation = Quaternion.identity;
+        this.transform.position = new Vector3(18.8f, 0.0f, 24.0f);
 
         prevTankToTargetDistance = tankToTargetDistance;
         tankToTargetDistance = Vector3.Distance(this.transform.localPosition, target.localPosition);
@@ -101,51 +96,51 @@ public class TankAIMachineLearning : Agent
         {
             PlaceMine();
         }*/
-        if (actions.ContinuousActions.Array[3] == 1.0f)
+        /*if (actions.ContinuousActions.Array[3] == 1.0f)
         {
             Shoot(bulletSpawn);
+        }*/
+        // punish the longer it takes
+        if (true)
+        {
+            AddReward(-0.0001f);
         }
         if (tankToTargetDistance < prevTankToTargetDistance)
         {
             AddReward(0.01f);
         }
-        // punish the longer it takes
-        if (true)
-        {
-            AddReward(-0.001f);
-        }
         if (tankToTargetDistance > prevTankToTargetDistance)
         {
             AddReward(-0.02f);
         }
-        if (tankToTargetDistance < 14.0f)
+        if (HasDirectVision())
         {
-            Debug.Log("Tank reached the target");
+            UnityEngine.Debug.Log("Has vision of target");
             AddReward(10.0f);
             printReward();
             EndEpisode();
         }
-        if (IsOutsideNavMesh(this.transform.position))
+        /*if (tankToTargetDistance < 9.0f)
         {
-            Debug.Log("Tank is out of bounds");
+            UnityEngine.Debug.Log("Tank reached the target");
+            AddReward(10.0f);
+            printReward();
+            EndEpisode();
+        }*/
+        /*if (stopwatch.ElapsedMilliseconds > 10000)
+        {
+            UnityEngine.Debug.Log("Tank ran out of time");
             AddReward(-10.0f);
             printReward();
             EndEpisode();
-        }
-        if (StepCount > 50000)
-        {
-            Debug.Log("Tank ran out of time");
-            AddReward(-10.0f);
-            printReward();
-            EndEpisode();
-        }
+        }*/
         prevTankToTargetDistance = tankToTargetDistance;
         tankToTargetDistance = Vector3.Distance(this.transform.localPosition, target.localPosition);
     }
 
     private void printReward()
     {
-        Debug.Log(GetCumulativeReward());
+        UnityEngine.Debug.Log(GetCumulativeReward());
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -153,21 +148,14 @@ public class TankAIMachineLearning : Agent
         // Get movement input from the MlAgents system
         actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Vertical");
         actionsOut.ContinuousActions.Array[1] = Input.GetAxis("Horizontal");
-        actionsOut.ContinuousActions.Array[2] = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
-        actionsOut.ContinuousActions.Array[3] = Input.GetKey(KeyCode.Mouse0) ? 1.0f : 0.0f;
+        /*actionsOut.ContinuousActions.Array[2] = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
+        actionsOut.ContinuousActions.Array[3] = Input.GetKey(KeyCode.Mouse0) ? 1.0f : 0.0f;*/
     }
 
     bool IsOutsideNavMesh(Vector3 position)
     {
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(position, out hit, 0.1f, NavMesh.AllAreas))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return !NavMesh.SamplePosition(position, out hit, 0.1f, NavMesh.AllAreas);
     }
 
     private void Move(float horizontal, float vertical)
@@ -341,6 +329,11 @@ public class TankAIMachineLearning : Agent
 
     virtual public void DestroyTank(float explosionSize = 1.0f)
     {
+        UnityEngine.Debug.Log("Tank was destroyed");
+        AddReward(-10.0f);
+        printReward();
+        EndEpisode();
+        return;
         if (explosionPrefab != null)
         {
             GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
@@ -354,5 +347,24 @@ public class TankAIMachineLearning : Agent
         {
             Destroy(gameObject);
         }
+    }
+    private bool HasDirectVision()
+    {
+        // Calculate the direction from this object to the target
+        Vector3 direction = target.position - transform.position;
+
+        // Create a ray from this object's position in the direction of the target
+        Ray ray = new Ray(transform.position, direction);
+
+        // Set the maximum distance for the raycast (adjust as needed)
+        float maxDistance = direction.magnitude;
+
+        // Perform the raycast
+        RaycastHit hit;
+        bool hitSomething = Physics.Raycast(ray, out hit, maxDistance);
+        UnityEngine.Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red, 1.0f);
+
+        // Check if the ray hit the target or if there was an obstacle in between
+        return hitSomething && hit.transform == target;
     }
 }
