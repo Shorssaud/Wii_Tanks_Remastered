@@ -60,7 +60,7 @@ public class BulletBase : MonoBehaviour
         {
             if (ricochetCount < ricochetMax)
             {
-                FindObjectOfType<AudioManager>().Play("Ricochet");
+                //FindObjectOfType<AudioManager>().Play("Ricochet");
                 if (ricochetParticlePrefab != null)
                 {
                     Instantiate(ricochetParticlePrefab, transform.position, Quaternion.identity);
