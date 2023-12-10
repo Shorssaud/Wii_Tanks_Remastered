@@ -176,7 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1734983643311411390}
   - component: {fileID: 7001486565042108955}
-  - component: {fileID: 9133994829559326344}
+  - component: {fileID: 8628797563804321680}
   m_Layer: 11
   m_Name: Hole
   m_TagString: Untagged
@@ -217,8 +217,8 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
---- !u!135 &9133994829559326344
-SphereCollider:
+--- !u!65 &8628797563804321680
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -236,5 +236,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2.82
-  m_Center: {x: 0, y: -1, z: 0}
+  m_Size: {x: 6, y: 3.22, z: 4.62}
+  m_Center: {x: 0, y: 0, z: 0}

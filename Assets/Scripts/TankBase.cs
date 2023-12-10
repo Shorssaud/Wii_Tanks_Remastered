@@ -97,15 +97,16 @@ public class Tank : MonoBehaviour
 
         // Define the layer mask for the "Default" layer 
         LayerMask defaultLayerMask = LayerMask.GetMask("Default");
+        LayerMask holeLayerMask = LayerMask.GetMask("Hole");
 
         // Ignore collisions between the tank's collider and itself
         Physics.IgnoreCollision(tankCollider, tankCollider);
 
         // Perform a check to see if the tank would collide with any object in default layer at the future position
-        if (Physics.CheckSphere(futurePosition, tankCollider.radius, defaultLayerMask) && vel != Vector3.zero)
+        if (Physics.CheckSphere(futurePosition, tankCollider.radius, defaultLayerMask | holeLayerMask) && vel != Vector3.zero)
         {
             // Get all colliders overlapping the CheckSphere
-            Collider[] colliders = Physics.OverlapSphere(futurePosition, tankCollider.radius/4, defaultLayerMask);
+            Collider[] colliders = Physics.OverlapSphere(futurePosition, tankCollider.radius/4, defaultLayerMask | holeLayerMask);
 
             // Iterate through the colliders to check if any have the tank's own tag
             foreach (Collider collider in colliders)
