@@ -45,7 +45,7 @@ public class TankAIBlack: Tank
     private void MovementDecision()
     {
         // Move towards the player but stay a minimum distance away
-        float minDistance = 30f;
+        float minDistance = 40f;
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         if (distanceToPlayer < minDistance)
         {
