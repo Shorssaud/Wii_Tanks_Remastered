@@ -155,6 +155,7 @@ public class TankPlayer : Tank
 
     public override void DestroyTank(float explosionSize = 1)
     {
+        FindObjectOfType<AudioManager>().Play("Explosion");
         base.DestroyTank(explosionSize);
     }
 }

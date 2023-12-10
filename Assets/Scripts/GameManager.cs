@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(WinAndNext());
 
                 FindObjectOfType<AudioManager>().PauseEverything();
+                FindObjectOfType<AudioManager>().Play("Explosion");
                 FindObjectOfType<AudioManager>().Play("Round Start");
             }
         }
