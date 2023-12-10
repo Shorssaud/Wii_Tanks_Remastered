@@ -5,12 +5,15 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public TankPlayer player;
-    public GameObject loseMessage;
-    public GameObject winMessage;
+    private GameObject loseMessage;
+    private GameObject winMessage;
+
+    private bool isLoose;
 
     void Start()
     {
+        loseMessage = GameObject.Find("Destroyed");
+        winMessage = GameObject.Find("MissionCleared");
         loseMessage.SetActive(false);
         winMessage.SetActive(false);
     }
@@ -24,9 +27,8 @@ public class GameManager : MonoBehaviour
     private void checkLose()
     {
         if (GameObject.FindGameObjectsWithTag("Player").Length == 0) {
-            Debug.Log("CheckLose");
-            player.RemoveLife();
-            if (player.GetLives() <= 0) StartCoroutine(LoseAndEnd());
+            //player.RemoveLife();
+            if ((PlayerPrefs.GetInt("Lives") - 1) <= 0) StartCoroutine(LoseAndEnd());
             else StartCoroutine(LoseAndRetry());
         }
     }
@@ -49,28 +51,32 @@ public class GameManager : MonoBehaviour
 
     IEnumerator LoseAndRetry()
     {
-        loseMessage.gameObject.SetActive(true);
+        loseMessage.SetActive(true);
         yield return new WaitForSeconds(2f); // Attendre 1 seconde
+        PlayerPrefs.SetInt("Lives", PlayerPrefs.GetInt("Lives") - 1);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/Transition");
     }
 
     IEnumerator LoseAndEnd()
     {
-        loseMessage.gameObject.SetActive(true);
+        loseMessage.SetActive(true);
         yield return new WaitForSeconds(2f); // Attendre 1 seconde
+        PlayerPrefs.SetInt("Lives", PlayerPrefs.GetInt("Lives") - 1);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/LoseMenu");
     }
 
     IEnumerator WinAndNext()
     {
-        winMessage.gameObject.SetActive(true);
+        winMessage.SetActive(true);
+        //winMessage.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f); // Attendre 1 seconde
         UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/Transition");
     }
 
     IEnumerator WinAndEnd()
     {
-        winMessage.gameObject.SetActive(true);
+        winMessage.SetActive(true);
+        //winMessage.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f); // Attendre 1 seconde
         UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Menus/WinMenu");
     }

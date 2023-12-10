@@ -12,6 +12,7 @@ TagManager:
   - WallBreakable
   - FX
   - Mine
+  - UIDestroyed
   layers:
   - Default
   - TransparentFX
