@@ -7,6 +7,8 @@ public class BulletBase : MonoBehaviour
     public float speed;
     public int ricochetCount = 0;
     public int ricochetMax = 1;
+    private float ricochetTimerMax = 0.2f;
+    private float ricochetTimer = 0.0f;
     private Vector3 vel;
 
     public GameObject explosionParticlePrefab;
@@ -29,6 +31,7 @@ public class BulletBase : MonoBehaviour
     {
         // Move the bullet
         transform.position += vel * speed * Time.deltaTime;
+        ricochetTimer -= Time.deltaTime;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -64,7 +67,7 @@ public class BulletBase : MonoBehaviour
         // If the bullet collides with a wall, destroy the bullet or ricochet
         if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "WallBreakable")
         {
-            if (ricochetCount < ricochetMax)
+            if (ricochetCount < ricochetMax && ricochetTimer < 0)
             {
                 //FindObjectOfType<AudioManager>().Play("Ricochet");
                 if (ricochetParticlePrefab != null)
@@ -82,6 +85,7 @@ public class BulletBase : MonoBehaviour
 
                 // rotate the bullet to face the direction it is moving
                 transform.rotation = Quaternion.LookRotation(vel);
+                ricochetTimer = ricochetTimerMax;
             }
             else
             {
