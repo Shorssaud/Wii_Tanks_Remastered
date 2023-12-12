@@ -30,7 +30,6 @@ public class TankAIBrown : Tank
 
     private void AimAndShoot()
     {
-
         // rotate randomly when reach
         if (Quaternion.Angle(aimAngle, cannon.rotation) < 10f)
         {

@@ -154,6 +154,7 @@ public class TankAIGreen : Tank
             }
         }
     }
+
     // Function to simulate the bouncing ray
     int SimulateBouncingRay(Vector3 origin, Vector3 direction, int remainingBounces)
     {

@@ -38,7 +38,13 @@ public class BulletBase : MonoBehaviour
         {
             Destroy(gameObject);
             float explosionSize = 3.0f;
-            collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
+            if (collision.gameObject.GetComponent<TankAIMachineLearning>() != null)
+            {
+                collision.gameObject.GetComponent<TankAIMachineLearning>().DestroyTank(explosionSize);
+            } else
+            {
+                collision.gameObject.GetComponent<Tank>().DestroyTank(explosionSize);
+            }
             if (collision.gameObject.tag == "AI")
             {
                 FindObjectOfType<AudioManager>().Play("Explosion");
@@ -86,6 +92,11 @@ public class BulletBase : MonoBehaviour
     }
     private void OnDestroy()
     {
+        if (parentTank != null && parentTank.GetComponent<TankAIMachineLearning>() != null)
+        {
+            parentTank.GetComponent<TankAIMachineLearning>().RemoveBullet();
+            return;
+        }
         if (parentTank != null) parentTank.GetComponent<Tank>().RemoveBullet();
     }
 

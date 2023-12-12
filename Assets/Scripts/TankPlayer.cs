@@ -153,9 +153,9 @@ public class TankPlayer : Tank
         PlayerPrefs.SetInt("Lives", 3);
     }
 
-    public override void DestroyTank(float explosionSize = 1)
+    public override void DestroyTank(float explosionSize = 1.0f)
     {
-        FindObjectOfType<AudioManager>().Play("Explosion");
+        //FindObjectOfType<AudioManager>().Play("Explosion");
         base.DestroyTank(explosionSize);
     }
 }
