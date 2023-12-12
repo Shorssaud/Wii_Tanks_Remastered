@@ -50,7 +50,7 @@ public class BulletBase : MonoBehaviour
             }
             if (collision.gameObject.tag == "AI")
             {
-                FindObjectOfType<AudioManager>().Play("Explosion");
+                //FindObjectOfType<AudioManager>().Play("Explosion");
                 int currentScore = PlayerPrefs.GetInt("TotalScore");
                 PlayerPrefs.SetInt("TotalScore", currentScore + 1);
                 PlayerPrefs.Save();

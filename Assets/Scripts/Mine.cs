@@ -80,6 +80,11 @@ public class Mine : MonoBehaviour
             // Handle destruction of tanks, bullets, and breakable walls
             if (c.gameObject.tag == "AI" || c.gameObject.tag == "Player")
             {
+                if (c.gameObject != null && c.gameObject.GetComponent<TankAIMachineLearning>() != null)
+                {
+                    c.gameObject.GetComponent<TankAIMachineLearning>().AddReward(1.0f);
+                    return;
+                }
                 c.gameObject.GetComponent<Tank>().DestroyTank(explosionScale); // Pass explosionScale as parameter
             }
             if (!isMined && c.gameObject.tag == "Mine")
@@ -95,6 +100,11 @@ public class Mine : MonoBehaviour
             {
                 Destroy(c.gameObject);
             }
+        }
+        if (parentTank != null && parentTank.GetComponent<TankAIMachineLearning>() != null)
+        {
+            parentTank.GetComponent<TankAIMachineLearning>().AddReward(1.0f);
+            return;
         }
         if (parentTank != null)
         {

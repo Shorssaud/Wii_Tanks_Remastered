@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 8628797563804321680}
   m_Layer: 11
   m_Name: Hole
-  m_TagString: Untagged
+  m_TagString: Hole
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

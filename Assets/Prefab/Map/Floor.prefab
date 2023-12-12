@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6503803229692352890}
   m_Layer: 3
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Undefined
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.33333334
+  m_VoxelSize: 1.4333334
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: d3de8f029e177254a8727fd4b87fb433, type: 2}
   m_BuildHeightMesh: 0

@@ -5,7 +5,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using Exploder.Utils;
-
+using UnityEngine.UIElements;
 
 public class TankAIMachineLearning : Agent
 {
@@ -14,8 +14,8 @@ public class TankAIMachineLearning : Agent
     private float tankToTargetDistance;
     public Rigidbody rb;
     float maxRaycastDistance = 50.0f;
-    public GameObject tankPlayerPrefab;
-    TankPlayer tankPlayer;
+    public GameObject otherTankPrefab;
+    private GameObject otherTank;
     Stopwatch stopwatch = new Stopwatch();
 
     // From TankAIBrown
@@ -47,14 +47,18 @@ public class TankAIMachineLearning : Agent
     public TrailRenderer leftTrailRenderer;
     public TrailRenderer rightTrailRenderer;
 
+    public SphereCollider tankCollider;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        cannon = transform.Find("cannon");
         nextFire = 0;
         nextMine = 0;
         currentBullets = 0;
         shotPause = 0;
+        currentCannonRot = cannon.rotation;
     }
 
     private void Update()
@@ -66,11 +70,11 @@ public class TankAIMachineLearning : Agent
     public override void OnEpisodeBegin()
     {
         // Create the player tank again
-        if (!tankPlayer)
+        if (!otherTank)
         {
-            GameObject tankPlayerInstance = Instantiate(tankPlayerPrefab, transform.position, Quaternion.identity);
-            tankPlayer = tankPlayerInstance.GetComponentInChildren<TankPlayer>();
-            tankPlayer.transform.position = new Vector3(-75.0f, 0.0f, 23.0f);
+            otherTank = Instantiate(otherTankPrefab, transform.position, Quaternion.identity);
+            otherTank.transform.SetParent(transform.parent);
+            otherTank.transform.localPosition = new Vector3(-100.0f, 0.0f,1.5f);
 
             cannon = transform.Find("cannon");
             bulletSpawn = cannon.Find("bulletSpawn");
@@ -80,50 +84,63 @@ public class TankAIMachineLearning : Agent
         this.rb.angularVelocity = Vector3.zero;
         this.rb.velocity = Vector3.zero;
         this.rb.rotation = Quaternion.identity;
-        this.transform.position = new Vector3(18.8f, 0.0f, 24.0f);
+        this.transform.localPosition = new Vector3(0, 0, 0);
+        // set the cannon rotation to 0, 0, -90
 
         prevTankToTargetDistance = tankToTargetDistance;
-        tankToTargetDistance = Vector3.Distance(this.transform.localPosition, tankPlayer.transform.localPosition);
+        tankToTargetDistance = Vector3.Distance(this.transform.localPosition, otherTank.transform.localPosition);
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
         // Target and Agent positions
-        sensor.AddObservation(tankPlayer.transform.localPosition);
+        if (otherTank)
+        {
+            sensor.AddObservation(otherTank.transform.localPosition);
+            sensor.AddObservation(this.transform.localPosition);
+        }
+        else
+        {
+            sensor.AddObservation(new Vector3(0, 0.0f, 0f));
+            sensor.AddObservation(this.transform.localPosition);
+        }
         sensor.AddObservation(this.transform.localPosition);
-        sensor.AddObservation(GetObservationInDirection(Vector3.forward));
-        sensor.AddObservation(GetObservationInDirection(Vector3.back));
-        sensor.AddObservation(GetObservationInDirection(Vector3.right));
-        sensor.AddObservation(GetObservationInDirection(Vector3.left));
-        sensor.AddObservation(GetObservationInDirection(Vector3.forward + Vector3.right));
-        sensor.AddObservation(GetObservationInDirection(Vector3.forward + Vector3.left));
-        sensor.AddObservation(GetObservationInDirection(Vector3.back + Vector3.right));
-        sensor.AddObservation(GetObservationInDirection(Vector3.back + Vector3.left));
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
         Move(actions.ContinuousActions[0], actions.ContinuousActions[1]);
-        AimAndShoot();
-        /*if (actions.ContinuousActions.Array[2] == 1.0f)
+        RotateCannon(actions.ContinuousActions[2]);
+        if (actions.ContinuousActions[3] > 0.9)
+        {
+            Shoot(bulletSpawn);
+            
+        }
+        if (actions.ContinuousActions.Array[4] > 0.9f)
         {
             PlaceMine();
-        }*/
+        }
+        // if the tankcollider collides with a wall
+        if (Physics.CheckSphere(vel * Time.deltaTime, tankCollider.radius, LayerMask.GetMask("Default")) && vel != Vector3.zero)
+        {
+            // Get all colliders overlapping the CheckSphere
+            Collider[] colliders = Physics.OverlapSphere(vel * Time.deltaTime, tankCollider.radius * 1.5f, LayerMask.GetMask("Default"));
 
-        // punish the longer it takes
-        if (true)
-        {
-            AddReward(-0.0001f);
+            // Iterate through the colliders to check if any have the tank's own tag
+            foreach (Collider collider in colliders)
+            {
+                if (collider.gameObject == gameObject)
+                {
+                    // Ignore collisions with objects having the same tag as the tank
+                    Physics.IgnoreCollision(tankCollider, collider, true);
+                }
+                else
+                {
+                    AddReward(-0.01f);
+                }
+            }
         }
-        /*if (tankToTargetDistance < prevTankToTargetDistance)
-        {
-            AddReward(0.01f);
-        }
-        if (tankToTargetDistance > prevTankToTargetDistance)
-        {
-            AddReward(-0.02f);
-        }*/
-        if (!tankPlayer)
+        if (!otherTank)
         {
             AddReward(10.0f);
             printReward();
@@ -131,13 +148,12 @@ public class TankAIMachineLearning : Agent
         }
         if (stopwatch.ElapsedMilliseconds > 7000)
         {
-            UnityEngine.Debug.Log("Tank ran out of time");
-            AddReward(-10.0f);
+            print("Tank ran out of time");
             printReward();
             EndEpisode();
         }
         prevTankToTargetDistance = tankToTargetDistance;
-        tankToTargetDistance = Vector3.Distance(this.transform.localPosition, tankPlayer.transform.localPosition);
+        tankToTargetDistance = Vector3.Distance(this.transform.localPosition, otherTank.transform.localPosition);
     }
 
     private void printReward()
@@ -148,15 +164,13 @@ public class TankAIMachineLearning : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         // Get movement input from the MlAgents system
-        actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Vertical");
-        actionsOut.ContinuousActions.Array[1] = Input.GetAxis("Horizontal");
-        /*actionsOut.ContinuousActions.Array[3] = Input.GetKey(KeyCode.Mouse0) ? 1.0f : 0.0f;*/
-    }
+        actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Horizontal");
+        actionsOut.ContinuousActions.Array[1] = Input.GetAxis("Vertical");
+        // Get turret rotation input from the MlAgents system
+        actionsOut.ContinuousActions.Array[2] = Input.GetAxis("CannonHorizontal");
 
-    bool IsOutsideNavMesh(Vector3 position)
-    {
-        NavMeshHit hit;
-        return !NavMesh.SamplePosition(position, out hit, 0.1f, NavMesh.AllAreas);
+        actionsOut.ContinuousActions.Array[3] = Input.GetKey(KeyCode.Mouse0) ? 1.0f : 0.0f;
+        actionsOut.ContinuousActions.Array[4] = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
     }
 
     private void Move(float horizontal, float vertical)
@@ -180,15 +194,15 @@ public class TankAIMachineLearning : Agent
         // Apply movement based on input and speed using the direction vector
         vel = moveDirection * maxSpeed;
 
-        // Calculate the tankPlayer.transform rotation based on the angle
+        // Calculate the otherTank.transform rotation based on the angle
         targetRotation = Quaternion.Euler(0f, angleDegrees, 0f);
-        // if the tankPlayer.transform rotation is more than 90 degrees from the current rotation rotate the rear instead
+        // if the otherTank.transform rotation is more than 90 degrees from the current rotation rotate the rear instead
         if (transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y > 90 || transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y < -90)
         {
-            // Calculate the tankPlayer.transform rotation based on the angle
+            // Calculate the otherTank.transform rotation based on the angle
             targetRotation = Quaternion.Euler(0f, angleDegrees + 180, 0f);
         }
-        // Set the rotation of the rigidbody to the tankPlayer.transform rotation
+        // Set the rotation of the rigidbody to the otherTank.transform rotation
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
         if (shotPause > 0)
         {
@@ -248,39 +262,21 @@ public class TankAIMachineLearning : Agent
 
     }
 
-    private void AimAndShoot()
+    private void RotateCannon(float horizontal)
     {
-        // Before doing anything, check if the player is still active
-        if (tankPlayer == null)
-        {
-            return; // If not, don't aim or shoot
-        }
         cannon.rotation = currentCannonRot; //Always keep the cannon facing the desired direction
-        Vector3 directionToPlayer = tankPlayer.transform.position - transform.position; // Get direction to player
-        directionToPlayer.y = 0; // Ignore vertical difference
-        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer); // Create a quaternion (rotation) based on looking down the vector from the ai to the player
-        Vector3 currentRotation = cannon.rotation.eulerAngles; // Extract current rotation angles
-
-        // Rotate turret slowly towards player only on the Y axis
-        cannon.rotation = Quaternion.Euler(currentRotation.x,
-                                           Quaternion.RotateTowards(cannon.rotation, lookRotation, rotSpeed * Time.deltaTime).eulerAngles.y,
-                                           currentRotation.z);
+        float angle = horizontal * 360;
+        Quaternion newRotation = Quaternion.Euler(0f, angle, -90f);
+        float yRotation = newRotation.eulerAngles.y;
+        // Set the cannon's rotation
+        // Preserve the current X and Z rotations, only change the Y rotation
+        cannon.rotation = Quaternion.Euler(cannon.rotation.eulerAngles.x, yRotation, cannon.rotation.eulerAngles.z);
         currentCannonRot = cannon.rotation;
-
-        // Check if the tank y rotation is roughly facing the player before shooting
-        if (Vector3.Angle(cannon.forward, directionToPlayer) < 10f)
-        {
-            // Check for line of sight
-            if (HasLineOfSightToPlayer())
-            {
-                Shoot(bulletSpawn);
-            }
-        }
     }
 
     private bool HasLineOfSightToPlayer()
     {
-        Vector3 direction = tankPlayer.transform.position - cannon.position;
+        Vector3 direction = otherTank.transform.position - cannon.position;
         RaycastHit hit;
 
         // Calculate the bullet size/radius (assuming spherical for illustration)
@@ -309,6 +305,7 @@ public class TankAIMachineLearning : Agent
     {
         if (nextFire > 0 || currentBullets >= maxBullets)
             return;
+        AddReward(0.01f);
         // If bulletSpawn is in a wall, don't shoot
         if (Physics.CheckBox(bulletSpawn.position, bulletSpawn.localScale / 2, bulletSpawn.rotation, LayerMask.GetMask("Default")))
         {
@@ -337,7 +334,7 @@ public class TankAIMachineLearning : Agent
         // reset firing timer
         nextFire = fireRate;
 
-        FindObjectOfType<AudioManager>().Play("TankShot");
+        //FindObjectOfType<AudioManager>().Play("TankShot");
     }
 
     // Places a mine at the position of the tank
@@ -345,6 +342,7 @@ public class TankAIMachineLearning : Agent
     {
         if (nextMine > 0 || currentMines >= maxMines)
             return;
+        AddReward(0.01f);
         // If the tank is in a wall, don't place a mine
         if (Physics.CheckBox(transform.position, transform.localScale / 2, transform.rotation, LayerMask.GetMask("Default")))
         {
@@ -405,19 +403,5 @@ public class TankAIMachineLearning : Agent
         {
             Destroy(gameObject);
         }
-    }
-
-    private float GetObservationInDirection(Vector3 direction)
-    {
-        RaycastHit hit;
-        // Cast a ray in the specified direction and check for hits
-        bool ray = Physics.Raycast(transform.position, direction, out hit, maxRaycastDistance);
-        UnityEngine.Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
-        if (ray)
-        {
-            // Normalize the distance to a value between 0 and 1
-            return Mathf.Clamp01(hit.distance / maxRaycastDistance);
-        }
-        return 0f;
     }
 }

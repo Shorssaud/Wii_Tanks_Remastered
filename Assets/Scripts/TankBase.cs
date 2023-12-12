@@ -23,7 +23,7 @@ public class Tank : MonoBehaviour
 
     public GameObject explosionPrefab;
 
-    private Vector3 vel = Vector3.zero;
+    public Vector3 vel = Vector3.zero;
     private Quaternion targetRotation;
 
     public GameObject bulletPrefab;
@@ -176,7 +176,7 @@ public class Tank : MonoBehaviour
         // reset firing timer
         nextFire = fireRate;
 
-        FindObjectOfType<AudioManager>().Play("TankShot");
+        //FindObjectOfType<AudioManager>().Play("TankShot");
     }
 
     // Places a mine at the position of the tank
