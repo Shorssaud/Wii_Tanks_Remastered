@@ -353,13 +353,13 @@ MonoBehaviour:
     VectorObservationSize: 9
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 5
+      m_NumContinuousActions: 6
       BranchSizes: 
-    VectorActionSize: 05000000
+    VectorActionSize: 06000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: ff5b38688bf228345a841042dd1c4435, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 47df94b63be4767479411ad4dc0d310a, type: 3}
   m_InferenceDevice: 1
   m_BehaviorType: 0
   m_BehaviorName: TankLearningAI

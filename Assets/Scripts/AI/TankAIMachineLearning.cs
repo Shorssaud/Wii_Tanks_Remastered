@@ -49,6 +49,8 @@ public class TankAIMachineLearning : Agent
 
     public SphereCollider tankCollider;
 
+    public GameObject arena;
+
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +61,7 @@ public class TankAIMachineLearning : Agent
         currentBullets = 0;
         shotPause = 0;
         currentCannonRot = cannon.rotation;
+        arena = this.transform.parent.gameObject;
     }
 
     private void Update()
@@ -85,7 +88,14 @@ public class TankAIMachineLearning : Agent
         this.rb.velocity = Vector3.zero;
         this.rb.rotation = Quaternion.identity;
         this.transform.localPosition = new Vector3(0, 0, 0);
-        // set the cannon rotation to 0, 0, -90
+        // destroy all bullets in the arena gameobject
+        foreach (Transform child in arena.transform)
+        {
+            if (child.gameObject.tag == "Bullet" || child.gameObject.tag == "Mine")
+            {
+                Destroy(child.gameObject);
+            }
+        }
 
         prevTankToTargetDistance = tankToTargetDistance;
         tankToTargetDistance = Vector3.Distance(this.transform.localPosition, otherTank.transform.localPosition);
@@ -106,43 +116,49 @@ public class TankAIMachineLearning : Agent
         }
         sensor.AddObservation(this.transform.localPosition);
     }
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        // Get movement input from the MlAgents system
+        actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Horizontal");
+        actionsOut.ContinuousActions.Array[1] = Input.GetAxis("Vertical");
+        actionsOut.ContinuousActions.Array[2] = Input.GetAxis("Forward");
+        // Get turret rotation input from the MlAgents system
+        actionsOut.ContinuousActions.Array[3] = Input.GetAxis("CannonHorizontal");
+
+        actionsOut.ContinuousActions.Array[4] = Input.GetAxis("Shoot");
+        actionsOut.ContinuousActions.Array[5] = Input.GetAxis("PlaceMine");
+    }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        Move(actions.ContinuousActions[0], actions.ContinuousActions[1]);
-        RotateCannon(actions.ContinuousActions[2]);
-        if (actions.ContinuousActions[3] > 0.9)
+        Move(actions.ContinuousActions[0], actions.ContinuousActions[1], actions.ContinuousActions[2]);
+        RotateCannon(actions.ContinuousActions[3]);
+        if (actions.ContinuousActions[4] > 0.9)
         {
             Shoot(bulletSpawn);
             
         }
-        if (actions.ContinuousActions.Array[4] > 0.9f)
+        if (actions.ContinuousActions.Array[5] > 0.9f)
         {
             PlaceMine();
         }
-        // if the tankcollider collides with a wall
-        if (Physics.CheckSphere(vel * Time.deltaTime, tankCollider.radius, LayerMask.GetMask("Default")) && vel != Vector3.zero)
-        {
-            // Get all colliders overlapping the CheckSphere
-            Collider[] colliders = Physics.OverlapSphere(vel * Time.deltaTime, tankCollider.radius * 1.5f, LayerMask.GetMask("Default"));
+        // Get all colliders overlapping the CheckSphere
+        Collider[] colliders = Physics.OverlapSphere(this.transform.position, tankCollider.radius / 2, LayerMask.GetMask("Default"));
+        //show this sphere in debug
 
-            // Iterate through the colliders to check if any have the tank's own tag
-            foreach (Collider collider in colliders)
+        // Iterate through the colliders to check if any have the tank's own tag
+        foreach (Collider collider in colliders)
+        {
+            if (collider.gameObject.tag == "Wall" || collider.gameObject.tag == "WallBreakable")
             {
-                if (collider.gameObject == gameObject)
-                {
-                    // Ignore collisions with objects having the same tag as the tank
-                    Physics.IgnoreCollision(tankCollider, collider, true);
-                }
-                else
-                {
-                    AddReward(-0.1f);
-                }
+                AddReward(-0.01f);
+                //print("Tank Collided With Wall");
+                break;
             }
         }
         if (SimulateBouncingRay(transform.position, cannon.forward, bulletRicochetMax) != 0)
         {
-            AddReward(0.001f);
+            AddReward(0.01f);
         }
         if (!otherTank)
         {
@@ -165,19 +181,8 @@ public class TankAIMachineLearning : Agent
         UnityEngine.Debug.Log(GetCumulativeReward());
     }
 
-    public override void Heuristic(in ActionBuffers actionsOut)
-    {
-        // Get movement input from the MlAgents system
-        actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Horizontal");
-        actionsOut.ContinuousActions.Array[1] = Input.GetAxis("Vertical");
-        // Get turret rotation input from the MlAgents system
-        actionsOut.ContinuousActions.Array[2] = Input.GetAxis("CannonHorizontal");
 
-        actionsOut.ContinuousActions.Array[3] = Input.GetKey(KeyCode.Mouse0) ? 1.0f : 0.0f;
-        actionsOut.ContinuousActions.Array[4] = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
-    }
-
-    private void Move(float horizontal, float vertical)
+    private void Move(float horizontal, float vertical, float forward)
     {
         // If there is no input on the horizontal or vertical axis set the velocity to 0
         if (horizontal == 0 && vertical == 0)
@@ -259,11 +264,9 @@ public class TankAIMachineLearning : Agent
             if (leftTrailRenderer != null) leftTrailRenderer.emitting = false;
             if (rightTrailRenderer != null) rightTrailRenderer.emitting = false;
         }
-
         // Move the tank while avoiding wall collisions
-        transform.position += vel * Time.deltaTime;
-
-
+        if (forward > 0.1f)
+            transform.position += vel * Time.deltaTime * forward;
     }
 
     private void RotateCannon(float horizontal)
@@ -278,38 +281,12 @@ public class TankAIMachineLearning : Agent
         currentCannonRot = cannon.rotation;
     }
 
-    private bool HasLineOfSightToPlayer()
-    {
-        Vector3 direction = otherTank.transform.position - cannon.position;
-        RaycastHit hit;
-
-        // Calculate the bullet size/radius (assuming spherical for illustration)
-        float bulletRadius = bulletPrefab.GetComponent<Collider>().bounds.extents.magnitude;
-
-        if (Physics.SphereCast(cannon.position, bulletRadius, direction, out hit))
-        {
-            // Check if the spherecast hits the player
-            if (hit.collider.tag == "Player")
-            {
-                return true; // Line of sight is clear, player is hit directly
-            }
-
-            // Check if the spherecast hits a wall
-            if (hit.collider.tag == "Wall")
-            {
-                print(hit.collider.name);
-                return false; // Line of sight is blocked by a wall
-            }
-        }
-        return false; // Line of sight is not clear
-    }
-
     // Shoots a basic bullet
     private void Shoot(Transform bulletSpawn)
     {
         if (nextFire > 0 || currentBullets >= maxBullets)
             return;
-        AddReward(0.01f);
+        AddReward(0.1f);
         // If bulletSpawn is in a wall, don't shoot
         if (Physics.CheckBox(bulletSpawn.position, bulletSpawn.localScale / 2, bulletSpawn.rotation, LayerMask.GetMask("Default")))
         {
@@ -327,6 +304,9 @@ public class TankAIMachineLearning : Agent
         currentBullets++;
         // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+        
+        //make the bullet a child of the arena
+        bullet.transform.SetParent(transform.parent);
 
         // Apply the tanks bullet settings
         bullet.GetComponent<BulletBase>().speed = bulletSpeed;
@@ -346,7 +326,7 @@ public class TankAIMachineLearning : Agent
     {
         if (nextMine > 0 || currentMines >= maxMines)
             return;
-        AddReward(0.01f);
+        AddReward(0.05f);
         // If the tank is in a wall, don't place a mine
         if (Physics.CheckBox(transform.position, transform.localScale / 2, transform.rotation, LayerMask.GetMask("Default")))
         {
@@ -366,7 +346,8 @@ public class TankAIMachineLearning : Agent
         }
         // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
         GameObject mine = Instantiate(minePrefab, transform.position, transform.rotation);
-
+        // set the parent to the arena
+        mine.transform.SetParent(transform.parent);
         //set the parent tank
         mine.GetComponent<Mine>().parentTank = gameObject;
 
