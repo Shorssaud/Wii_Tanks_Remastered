@@ -25,7 +25,7 @@ public class TankAIBrown : Tank
     // Update is called once per frame
     void Update()
     {
-        AimAndShoot();
+        //AimAndShoot();
     }
 
     private void AimAndShoot()

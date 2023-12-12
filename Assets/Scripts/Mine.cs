@@ -82,7 +82,7 @@ public class Mine : MonoBehaviour
             {
                 if (c.gameObject != null && c.gameObject.GetComponent<TankAIMachineLearning>() != null)
                 {
-                    c.gameObject.GetComponent<TankAIMachineLearning>().AddReward(1.0f);
+                    c.gameObject.GetComponent<TankAIMachineLearning>().DestroyTank(explosionScale);
                     return;
                 }
                 c.gameObject.GetComponent<Tank>().DestroyTank(explosionScale); // Pass explosionScale as parameter

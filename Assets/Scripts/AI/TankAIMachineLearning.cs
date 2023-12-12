@@ -136,9 +136,13 @@ public class TankAIMachineLearning : Agent
                 }
                 else
                 {
-                    AddReward(-0.01f);
+                    AddReward(-0.1f);
                 }
             }
+        }
+        if (SimulateBouncingRay(transform.position, cannon.forward, bulletRicochetMax) != 0)
+        {
+            AddReward(0.001f);
         }
         if (!otherTank)
         {
@@ -371,6 +375,36 @@ public class TankAIMachineLearning : Agent
 
         // reset mine timer
         nextMine = mineRate;
+    }
+
+    int SimulateBouncingRay(Vector3 origin, Vector3 direction, int remainingBounces)
+    {
+        // Perform a raycast
+        RaycastHit hit;
+        if (Physics.Raycast(origin, direction, out hit))
+        {
+            // Check if the ray hit the player
+            if (hit.collider.CompareTag("Player"))
+                return 0;
+            if (hit.collider.CompareTag("AI"))
+            {
+                // Perform actions when the player is hit by the bouncing ray
+                UnityEngine.Debug.DrawRay(origin, direction * 50, Color.red);
+                return 1;
+            }
+            UnityEngine.Debug.DrawRay(origin, direction * 50, Color.blue);
+            // If the ray hit a wall, calculate the reflection direction
+            Vector3 reflection = Vector3.Reflect(direction, hit.normal);
+
+            // Continue the ray with the reflection direction
+            if (remainingBounces > 0)
+            {
+                int temp = SimulateBouncingRay(hit.point, reflection, remainingBounces - 1);
+                if (temp != 0)
+                    return 1 + temp;
+            }
+        }
+        return 0;
     }
 
     public void RemoveBullet()
