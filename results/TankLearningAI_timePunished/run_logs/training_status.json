@@ -1,0 +1,65 @@
+{
+    "TankLearningAI": {
+        "checkpoints": [
+            {
+                "steps": 109971,
+                "file_path": "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-109971.onnx",
+                "reward": -2.2599997334182262,
+                "creation_time": 1702386718.3887703,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-109971.pt"
+                ]
+            },
+            {
+                "steps": 114992,
+                "file_path": "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-114992.onnx",
+                "reward": -5.779999703168869,
+                "creation_time": 1702386730.869242,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-114992.pt"
+                ]
+            },
+            {
+                "steps": 119947,
+                "file_path": "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-119947.onnx",
+                "reward": null,
+                "creation_time": 1702386743.3261158,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-119947.pt"
+                ]
+            },
+            {
+                "steps": 124969,
+                "file_path": "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-124969.onnx",
+                "reward": -0.533333462352554,
+                "creation_time": 1702386756.0520003,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-124969.pt"
+                ]
+            },
+            {
+                "steps": 126791,
+                "file_path": "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-126791.onnx",
+                "reward": -2.169999709352851,
+                "creation_time": 1702386766.0632465,
+                "auxillary_file_paths": [
+                    "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-126791.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 126791,
+            "file_path": "results\\TankLearningAI_timePunished\\TankLearningAI.onnx",
+            "reward": -2.169999709352851,
+            "creation_time": 1702386766.0632465,
+            "auxillary_file_paths": [
+                "results\\TankLearningAI_timePunished\\TankLearningAI\\TankLearningAI-126791.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.13.1+cpu"
+    }
+}
