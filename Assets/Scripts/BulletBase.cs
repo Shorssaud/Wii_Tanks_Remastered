@@ -98,7 +98,7 @@ public class BulletBase : MonoBehaviour
     {
         if (parentTank != null && parentTank.GetComponent<TankAIMachineLearning>() != null)
         {
-            parentTank.GetComponent<TankAIMachineLearning>().RemoveBullet();
+            parentTank.GetComponent<TankAIMachineLearning>().RemoveBullet(this.transform.localPosition);
             return;
         }
         if (parentTank != null) parentTank.GetComponent<Tank>().RemoveBullet();
