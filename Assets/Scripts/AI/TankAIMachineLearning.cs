@@ -1,19 +1,14 @@
 using System.Diagnostics;
-using UnityEngine;
-using UnityEngine.AI;
 using Unity.MLAgents;
-using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
-using Exploder.Utils;
-using UnityEngine.UIElements;
+using Unity.MLAgents.Sensors;
+using UnityEngine;
 
 public class TankAIMachineLearning : Agent
 {
     // From this
     private float prevTankToTargetDistance;
     private float tankToTargetDistance;
-    public Rigidbody rb;
-    float maxRaycastDistance = 50.0f;
     public GameObject otherTankPrefab;
     private GameObject otherTank;
     Stopwatch stopwatch = new Stopwatch();
@@ -51,6 +46,13 @@ public class TankAIMachineLearning : Agent
 
     public GameObject arena;
 
+    // position rewards
+    private Vector3 prevBullLand;
+
+    // different levels
+    public GameObject[] levels;
+    public int currentLevel = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +64,7 @@ public class TankAIMachineLearning : Agent
         shotPause = 0;
         currentCannonRot = cannon.rotation;
         arena = this.transform.parent.gameObject;
+        prevBullLand = Vector3.zero;
     }
 
     private void Update()
@@ -72,22 +75,22 @@ public class TankAIMachineLearning : Agent
 
     public override void OnEpisodeBegin()
     {
+        this.transform.SetParent(levels[currentLevel].transform);
         // Create the player tank again
-        if (!otherTank)
+        if (otherTank)
         {
-            otherTank = Instantiate(otherTankPrefab, transform.position, Quaternion.identity);
-            otherTank.transform.SetParent(transform.parent);
-            otherTank.transform.localPosition = new Vector3(-100.0f, 0.0f,1.5f);
-
-            cannon = transform.Find("cannon");
-            bulletSpawn = cannon.Find("bulletSpawn");
+            Destroy(otherTank);
         }
+        otherTank = Instantiate(otherTankPrefab, transform.position, Quaternion.identity);
+        otherTank.transform.SetParent(transform.parent);
+        otherTank.transform.localPosition = levels[currentLevel].transform.Find("AISpawn").transform.localPosition;
+
+        cannon = transform.Find("cannon");
+        bulletSpawn = cannon.Find("bulletSpawn");
         stopwatch.Reset();
         stopwatch.Start();
-        this.rb.angularVelocity = Vector3.zero;
-        this.rb.velocity = Vector3.zero;
-        this.rb.rotation = Quaternion.identity;
-        this.transform.localPosition = new Vector3(0, 0, 0);
+        this.transform.rotation = Quaternion.identity;
+        this.transform.localPosition = levels[currentLevel].transform.Find("MLSpawn").transform.localPosition;
         // destroy all bullets in the arena gameobject
         foreach (Transform child in arena.transform)
         {
@@ -103,8 +106,6 @@ public class TankAIMachineLearning : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Target and Agent positions
-        RaycastHit hit;
         if (otherTank)
         {
             sensor.AddObservation(otherTank.transform.localPosition);
@@ -137,7 +138,7 @@ public class TankAIMachineLearning : Agent
     {
         Move(actions.ContinuousActions[0], actions.ContinuousActions[1], actions.ContinuousActions[2]);
         RotateCannon(actions.ContinuousActions[3]);
-        if (actions.ContinuousActions[4] > 0.8f)
+        if (actions.ContinuousActions[4] > 0.9f)
         {
             Shoot(bulletSpawn);
         }
@@ -154,26 +155,24 @@ public class TankAIMachineLearning : Agent
         {
             if (collider.gameObject.tag == "Wall" || collider.gameObject.tag == "WallBreakable")
             {
-                AddReward(-0.1f);
+                AddReward(-0.01f);
                 //print("Tank Collided With Wall");
                 break;
             }
         }
         if (SimulateBouncingRay(transform.position, cannon.forward, bulletRicochetMax) != 0)
         {
-            AddReward(0.001f);
+            AddReward(0.0001f);
         }
         if (!otherTank)
         {
             AddReward(100.0f);
-            printReward();
+            CheckForMoveOn(GetCumulativeReward());
             EndEpisode();
         }
         if (stopwatch.ElapsedMilliseconds > 30000)
         {
-            print("Tank ran out of time");
-            AddReward(-10.0f);
-            printReward();
+            CheckForMoveOn(GetCumulativeReward());
             EndEpisode();
         }
     }
@@ -267,11 +266,10 @@ public class TankAIMachineLearning : Agent
             if (rightTrailRenderer != null) rightTrailRenderer.emitting = false;
         }
         // Move the tank while avoiding wall collisions
-        if (forward > 0.1f)
+        if (forward > 0.2f)
         {
-            if (forward > 1f)
-                forward = 1f;
-                transform.position += vel * Time.deltaTime * forward;
+            transform.position += vel * Time.deltaTime;
+            AddReward(0.0001f);
         }
     }
 
@@ -296,7 +294,6 @@ public class TankAIMachineLearning : Agent
     {
         if (nextFire > 0 || currentBullets >= maxBullets)
             return;
-        AddReward(1f);
         // If bulletSpawn is in a wall, don't shoot
         if (Physics.CheckBox(bulletSpawn.position, bulletSpawn.localScale / 2, bulletSpawn.rotation, LayerMask.GetMask("Default")))
         {
@@ -306,15 +303,17 @@ public class TankAIMachineLearning : Agent
             {
                 if (collider.gameObject.tag == "Wall")
                 {
+                    AddReward(-0.01f);
                     return;
                 }
             }
         }
+        AddReward(0.001f);
         shotPause = 50;
         currentBullets++;
         // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-        
+
         //make the bullet a child of the arena
         bullet.transform.SetParent(transform.parent);
 
@@ -399,8 +398,13 @@ public class TankAIMachineLearning : Agent
         return temp;
     }
 
-    public void RemoveBullet()
+    public void RemoveBullet(Vector3 pos)
     {
+        if (Vector3.Distance(pos, otherTank.transform.localPosition) > Vector3.Distance(prevBullLand, otherTank.transform.localPosition)) ;
+        {
+            prevBullLand = pos;
+            AddReward(0.1f);
+        }
         currentBullets -= 1;
     }
 
@@ -411,23 +415,47 @@ public class TankAIMachineLearning : Agent
 
     public void DestroyTank(float explosionSize = 1.0f)
     {
-        UnityEngine.Debug.Log("Tank was destroyed");
-        AddReward(-10.0f);
-        printReward();
+        if (currentLevel > 0)
+        {
+            currentLevel--;
+            UnityEngine.Debug.Log("Score too low, sending back");
+            return;
+        }
+        AddReward(-100.0f);
         EndEpisode();
         return;
-        if (explosionPrefab != null)
+        //if (explosionPrefab != null)
+        //{
+        //    GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        //    explosion.transform.localScale *= explosionSize; // Scale the explosion effect
+        //}
+        //if (ExploderSingleton.ExploderInstance != null)
+        //{
+        //    ExploderSingleton.ExploderInstance.ExplodeObject(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //}
+    }
+
+    private void CheckForMoveOn(float currentReward)
+    {
+        if (currentReward > 100)
         {
-            GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            explosion.transform.localScale *= explosionSize; // Scale the explosion effect
+            if (currentLevel < levels.Length - 1)
+            {
+                currentLevel++;
+                UnityEngine.Debug.Log("Moving on to level " + currentLevel);
+                return;
+            }
         }
-        if (ExploderSingleton.ExploderInstance != null)
+        if (currentLevel > 0 && currentReward < 50)
         {
-            ExploderSingleton.ExploderInstance.ExplodeObject(gameObject);
+            currentLevel--;
+            UnityEngine.Debug.Log("Score too low, sending back");
+            return;
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        return;
     }
 }
