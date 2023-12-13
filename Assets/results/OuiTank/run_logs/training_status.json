@@ -1,0 +1,65 @@
+{
+    "TankLearningAI": {
+        "checkpoints": [
+            {
+                "steps": 5999941,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-5999941.onnx",
+                "reward": 0.7755200697283726,
+                "creation_time": 1702479425.7608016,
+                "auxillary_file_paths": [
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-5999941.pt"
+                ]
+            },
+            {
+                "steps": 6180199,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6180199.onnx",
+                "reward": 3.7965110021430757,
+                "creation_time": 1702479765.469718,
+                "auxillary_file_paths": [
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6180199.pt"
+                ]
+            },
+            {
+                "steps": 6267443,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6267443.onnx",
+                "reward": -0.13192328942172668,
+                "creation_time": 1702480038.18321,
+                "auxillary_file_paths": [
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6267443.pt"
+                ]
+            },
+            {
+                "steps": 6499977,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6499977.onnx",
+                "reward": 2.800445501293455,
+                "creation_time": 1702480563.9044933,
+                "auxillary_file_paths": [
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6499977.pt"
+                ]
+            },
+            {
+                "steps": 6777278,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6777278.onnx",
+                "reward": 2.6198363797418,
+                "creation_time": 1702481177.9764364,
+                "auxillary_file_paths": [
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6777278.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 6777278,
+            "file_path": "results\\OuiTank\\TankLearningAI.onnx",
+            "reward": 2.6198363797418,
+            "creation_time": 1702481177.9764364,
+            "auxillary_file_paths": [
+                "results\\OuiTank\\TankLearningAI\\TankLearningAI-6777278.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0.dev0",
+        "torch_version": "2.1.1+cu121"
+    }
+}

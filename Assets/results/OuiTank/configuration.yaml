@@ -6,9 +6,9 @@ behaviors:
       batch_size: 1024
       buffer_size: 10240
       learning_rate: 0.0003
-      beta: 0.005
+      beta: 0.01
       epsilon: 0.2
-      lambd: 0.95
+      lambd: 0.7
       num_epoch: 3
       shared_critic: false
       learning_rate_schedule: linear
@@ -38,7 +38,7 @@ behaviors:
     init_path: null
     keep_checkpoints: 5
     even_checkpoints: false
-    max_steps: 5000000
+    max_steps: 50000000
     time_horizon: 64
     summary_freq: 50000
     threaded: false
@@ -65,11 +65,11 @@ engine_settings:
   no_graphics: false
 environment_parameters: null
 checkpoint_settings:
-  run_id: EvilTank
+  run_id: OuiTank
   initialize_from: null
   load_model: false
   resume: true
-  force: true
+  force: false
   train_model: false
   inference: false
   results_dir: results

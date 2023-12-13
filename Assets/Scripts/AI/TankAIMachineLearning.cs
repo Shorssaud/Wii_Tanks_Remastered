@@ -47,9 +47,11 @@ public class TankAIMachineLearning : Agent
     public GameObject arena;
 
     private int doesHit = 0;
-
-    // position rewards
     private Vector3 prevBullLand;
+
+    // Advanced mods
+    private int bulletsShot = 0;
+    private int timer = 7000;
 
     // different levels
     public GameObject[] levels;
@@ -81,7 +83,14 @@ public class TankAIMachineLearning : Agent
 
     public override void OnEpisodeBegin()
     {
-        nextFire = fireRate;
+        if (currentLevel == 0)
+        {
+            timer = 7000;
+        }
+        else
+        {
+            timer = 15000;
+        }
         this.transform.SetParent(levels[currentLevel].transform);
         // Create the player tank again
         if (!otherTank)
@@ -95,15 +104,7 @@ public class TankAIMachineLearning : Agent
         stopwatch.Start();
         this.transform.rotation = Quaternion.identity;
         this.transform.localPosition = levels[currentLevel].transform.Find("MLSpawn").transform.localPosition;
-        // destroy all bullets in the arena gameobject
-        foreach (Transform child in arena.transform)
-        {
-            if (child.gameObject.tag == "Bullet" || child.gameObject.tag == "Mine")
-            {
-                Destroy(child.gameObject);
-            }
-        }
-        // set the cannon rotation to 0, 0, -90
+
         cannon.rotation = Quaternion.Euler(0, 0, -90);
         currentCannonRot = cannon.rotation;
         prevTankToTargetDistance = tankToTargetDistance;
@@ -129,16 +130,17 @@ public class TankAIMachineLearning : Agent
     public override void OnActionReceived(ActionBuffers actions)
     {
         //print(actions.DiscreteActions.Array[0] + " " + actions.DiscreteActions.Array[1] + " " + actions.DiscreteActions.Array[2] + " " + actions.DiscreteActions.Array[3] + " " + actions.DiscreteActions.Array[4]);
-        Move(actions.DiscreteActions[0], actions.DiscreteActions[1]);
-        RotateCannon(actions.DiscreteActions[2]);
         if (actions.DiscreteActions[3] == 1)
         {
             Shoot(bulletSpawn);
+            bulletsShot++;
         }
         if (actions.DiscreteActions.Array[4] == 1)
         {
             PlaceMine();
         }
+        Move(actions.DiscreteActions[0], actions.DiscreteActions[1]);
+        RotateCannon(actions.DiscreteActions[2]);
         // Get all colliders overlapping the CheckSphere
         Collider[] colliders = Physics.OverlapSphere(this.transform.position, tankCollider.radius / 2, LayerMask.GetMask("Default"));
         //show this sphere in debug
@@ -153,17 +155,9 @@ public class TankAIMachineLearning : Agent
                 break;
             }
         }
-        if (doesHit == 1)
-        {
-            AddReward(0.005f);
-        }
-        if (doesHit == 2)
-        {
-            AddReward(0.001f);
-        }
         if (!otherTank)
         {
-            AddReward(10.0f);
+            AddReward(5.0f + 10.0f / bulletsShot);
             consecutiveWins++;
             CheckForMoveOn(GetCumulativeReward());
             EndEpisode();
@@ -391,11 +385,11 @@ public class TankAIMachineLearning : Agent
 
     public void RemoveBullet(Vector3 pos)
     {
-        if (Vector3.Distance(pos, otherTank.transform.localPosition) > Vector3.Distance(prevBullLand, otherTank.transform.localPosition)) ;
-        {
-            prevBullLand = pos;
-            //AddReward(0.1f);
-        }
+        //if (Vector3.Distance(pos, otherTank.transform.localPosition) > Vector3.Distance(prevBullLand, otherTank.transform.localPosition)) ;
+        //{
+        //    prevBullLand = pos;
+        //    //AddReward(0.1f);
+        //}
         currentBullets -= 1;
     }
 
@@ -407,13 +401,8 @@ public class TankAIMachineLearning : Agent
     public void DestroyTank(float explosionSize = 1.0f)
     {
         consecutiveWins = 0;
-        if (currentLevel > 0)
-        {
-            currentLevel--;
-            UnityEngine.Debug.Log("Score too low, sending back");
-            return;
-        }
         //AddReward(-1.0f);
+        CheckForMoveOn(GetCumulativeReward());
         EndEpisode();
         return;
         //if (explosionPrefab != null)
@@ -433,6 +422,7 @@ public class TankAIMachineLearning : Agent
 
     private void CheckForMoveOn(float currentReward)
     {
+        ResetValues();
         if (currentReward > 10)
         {
             if (currentLevel < levels.Length - 1 && consecutiveWins >= 5)
@@ -450,5 +440,17 @@ public class TankAIMachineLearning : Agent
             return;
         }
         return;
+    }
+    private void ResetValues()
+    {
+        bulletsShot = 0;
+        nextFire = fireRate;
+        foreach (Transform child in arena.transform)
+        {
+            if (child.gameObject.tag == "Bullet" || child.gameObject.tag == "Mine")
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }

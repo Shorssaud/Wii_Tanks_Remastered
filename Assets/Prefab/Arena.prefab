@@ -696,9 +696,9 @@ MonoBehaviour:
   rotSpeed: 270
   bulletSpeed: 20
   bulletRicochetMax: 1
-  maxBullets: 1
+  maxBullets: 5
   maxMines: 1
-  fireRate: 3
+  fireRate: 0.3
   mineRate: 10
   explosionPrefab: {fileID: 1000012903210382, guid: fdc7727355b657843a3323f7c169535e, type: 3}
   bulletPrefab: {fileID: 3466702080525196982, guid: e842ee44ccb26f848899f1d0d9890b85, type: 3}
