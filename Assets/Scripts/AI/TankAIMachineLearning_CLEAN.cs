@@ -80,20 +80,14 @@ public class TankAIMachineLearningClean : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Horizontal");
-        actionsOut.ContinuousActions.Array[1] = Input.GetAxis("Vertical");
-        actionsOut.ContinuousActions.Array[2] = Input.GetAxis("Forward");
-        actionsOut.ContinuousActions.Array[3] = Input.GetAxis("CannonHorizontal");
-        actionsOut.ContinuousActions.Array[4] = Input.GetAxis("Shoot");
-        actionsOut.ContinuousActions.Array[5] = Input.GetAxis("PlaceMine");
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        Move(actions.ContinuousActions[0], actions.ContinuousActions[1], actions.ContinuousActions[2]);
-        RotateCannon(actions.ContinuousActions[3]);
-        if (actions.ContinuousActions[4] > 0.9f) Shoot(bulletSpawn);
-        if (actions.ContinuousActions[5] > 0.9f) PlaceMine();
+        Move(actions.DiscreteActions[0], actions.DiscreteActions[1]);
+        RotateCannon(actions.DiscreteActions[2]);
+        if (actions.DiscreteActions[3] == 1) Shoot(bulletSpawn);
+        if (actions.DiscreteActions[4] == 1) PlaceMine();
         CheckCollisionsAndRewards();
     }
 
@@ -221,15 +215,9 @@ public class TankAIMachineLearningClean : Agent
         }
     }
 
-    private void Move(float horizontal, float vertical, float forward)
+    private void Move(int horizontal, int forward)
     {
-        if (NoMovementInput(horizontal, vertical))
-            return;
-
-        CalculateMoveDirection(horizontal, vertical);
-        CalculateTargetRotation();
-        AdjustTargetRotation();
-        RotateTank();
+        RotateTank(horizontal);
         HandleShotPause();
 
         HandleCollisionAvoidance(CalculateFuturePosition());
@@ -237,31 +225,21 @@ public class TankAIMachineLearningClean : Agent
         MoveTankForward(forward);
     }
 
-    private bool NoMovementInput(float horizontal, float vertical) => horizontal == 0 && vertical == 0;
-
-    private void CalculateMoveDirection(float horizontal, float vertical)
+    private void RotateTank(int horizontal)
     {
-        float angle = Mathf.Atan2(horizontal, vertical);
-        float angleDegrees = angle * Mathf.Rad2Deg;
-        Vector3 moveDirection = new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle));
-        vel = moveDirection * maxSpeed;
-    }
-
-    private void CalculateTargetRotation()
-    {
-        targetRotation = Quaternion.Euler(0f, Mathf.Atan2(vel.x, vel.z) * Mathf.Rad2Deg, 0f);
-    }
-
-    private void AdjustTargetRotation()
-    {
-        if (Mathf.Abs(transform.rotation.eulerAngles.y - targetRotation.eulerAngles.y) > 90)
+        // if horizontal is 1, rotate right
+        if (horizontal == 1)
         {
-            targetRotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y + 180, 0f);
+            // rotate the tank right 
+            transform.Rotate(0f, rotSpeed * Time.deltaTime, 0f, Space.World);
+        }
+        // if horizontal is 2, rotate left
+        if (horizontal == 2)
+        {
+            // rotate the tank left
+            transform.Rotate(0f, -rotSpeed * Time.deltaTime, 0f, Space.World);
         }
     }
-
-    private void RotateTank() => transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
-
     private void HandleShotPause()
     {
         if (shotPause > 0)
@@ -316,23 +294,23 @@ public class TankAIMachineLearningClean : Agent
         }
     }
 
-    private void MoveTankForward(float forward)
+    private void MoveTankForward(int forward)
     {
-        if (forward > 0.2f)
+        if (forward == 1)
         {
             transform.position += vel * Time.deltaTime;
             AddReward(0.0001f);
         }
     }
 
-    private void RotateCannon(float horizontal)
+    private void RotateCannon(int horizontal)
     {
         cannon.rotation = currentCannonRot;
-        if (horizontal > 0.2f)
+        if (horizontal == 1)
         {
             cannon.Rotate(0f, rotSpeed * Time.deltaTime, 0f, Space.World);
         }
-        if (horizontal < -0.2f)
+        if (horizontal == 2)
         {
             cannon.Rotate(0f, -rotSpeed * Time.deltaTime, 0f, Space.World);
         }

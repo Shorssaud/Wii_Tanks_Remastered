@@ -20,6 +20,7 @@ public class TankAIBrown : Tank
 
         currentCannonRot = cannon.rotation;
         aimAngle = currentCannonRot;
+        vel = Vector3.zero;
     }
 
     // Update is called once per frame
