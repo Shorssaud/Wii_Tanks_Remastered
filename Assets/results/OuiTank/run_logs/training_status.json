@@ -2,58 +2,58 @@
     "TankLearningAI": {
         "checkpoints": [
             {
-                "steps": 5999941,
-                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-5999941.onnx",
-                "reward": 0.7755200697283726,
-                "creation_time": 1702479425.7608016,
+                "steps": 7071211,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-7071211.onnx",
+                "reward": 9.38784610239359,
+                "creation_time": 1702482062.5507128,
                 "auxillary_file_paths": [
-                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-5999941.pt"
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-7071211.pt"
                 ]
             },
             {
-                "steps": 6180199,
-                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6180199.onnx",
-                "reward": 3.7965110021430757,
-                "creation_time": 1702479765.469718,
+                "steps": 7499964,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-7499964.onnx",
+                "reward": 1.837500013038516,
+                "creation_time": 1702482841.661677,
                 "auxillary_file_paths": [
-                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6180199.pt"
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-7499964.pt"
                 ]
             },
             {
-                "steps": 6267443,
-                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6267443.onnx",
-                "reward": -0.13192328942172668,
-                "creation_time": 1702480038.18321,
+                "steps": 7930606,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-7930606.onnx",
+                "reward": 4.532631593315225,
+                "creation_time": 1702483655.7021399,
                 "auxillary_file_paths": [
-                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6267443.pt"
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-7930606.pt"
                 ]
             },
             {
-                "steps": 6499977,
-                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6499977.onnx",
-                "reward": 2.800445501293455,
-                "creation_time": 1702480563.9044933,
+                "steps": 7940863,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-7940863.onnx",
+                "reward": null,
+                "creation_time": 1702491972.5459347,
                 "auxillary_file_paths": [
-                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6499977.pt"
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-7940863.pt"
                 ]
             },
             {
-                "steps": 6777278,
-                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-6777278.onnx",
-                "reward": 2.6198363797418,
-                "creation_time": 1702481177.9764364,
+                "steps": 7952537,
+                "file_path": "results\\OuiTank\\TankLearningAI\\TankLearningAI-7952537.onnx",
+                "reward": 5.0,
+                "creation_time": 1702492274.6258667,
                 "auxillary_file_paths": [
-                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-6777278.pt"
+                    "results\\OuiTank\\TankLearningAI\\TankLearningAI-7952537.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 6777278,
+            "steps": 7952537,
             "file_path": "results\\OuiTank\\TankLearningAI.onnx",
-            "reward": 2.6198363797418,
-            "creation_time": 1702481177.9764364,
+            "reward": 5.0,
+            "creation_time": 1702492274.6258667,
             "auxillary_file_paths": [
-                "results\\OuiTank\\TankLearningAI\\TankLearningAI-6777278.pt"
+                "results\\OuiTank\\TankLearningAI\\TankLearningAI-7952537.pt"
             ]
         }
     },

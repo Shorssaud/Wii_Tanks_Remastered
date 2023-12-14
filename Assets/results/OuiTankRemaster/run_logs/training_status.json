@@ -1,0 +1,65 @@
+{
+    "TankLearningAI": {
+        "checkpoints": [
+            {
+                "steps": 1499952,
+                "file_path": "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-1499952.onnx",
+                "reward": 2.0327274785800413,
+                "creation_time": 1702488059.7262383,
+                "auxillary_file_paths": [
+                    "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-1499952.pt"
+                ]
+            },
+            {
+                "steps": 1999968,
+                "file_path": "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-1999968.onnx",
+                "reward": 15.0,
+                "creation_time": 1702489045.8767927,
+                "auxillary_file_paths": [
+                    "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-1999968.pt"
+                ]
+            },
+            {
+                "steps": 2499948,
+                "file_path": "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-2499948.onnx",
+                "reward": 4.733157894819191,
+                "creation_time": 1702490054.4969006,
+                "auxillary_file_paths": [
+                    "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-2499948.pt"
+                ]
+            },
+            {
+                "steps": 2999962,
+                "file_path": "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-2999962.onnx",
+                "reward": 1.3636363636363635,
+                "creation_time": 1702491152.6418636,
+                "auxillary_file_paths": [
+                    "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-2999962.pt"
+                ]
+            },
+            {
+                "steps": 3219894,
+                "file_path": "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-3219894.onnx",
+                "reward": 1.8,
+                "creation_time": 1702491700.0381267,
+                "auxillary_file_paths": [
+                    "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-3219894.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3219894,
+            "file_path": "results\\OuiTankRemaster\\TankLearningAI.onnx",
+            "reward": 1.8,
+            "creation_time": 1702491700.0381267,
+            "auxillary_file_paths": [
+                "results\\OuiTankRemaster\\TankLearningAI\\TankLearningAI-3219894.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0.dev0",
+        "torch_version": "2.1.1+cu121"
+    }
+}

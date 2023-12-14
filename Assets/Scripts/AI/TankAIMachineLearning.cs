@@ -48,9 +48,8 @@ public class TankAIMachineLearning : Agent
 
     private int doesHit = 0;
     private Vector3 prevBullLand;
-
-    // Advanced mods
     private int bulletsShot = 0;
+    // Advanced mods
     private int timer = 7000;
 
     // different levels
@@ -78,7 +77,6 @@ public class TankAIMachineLearning : Agent
     {
         nextFire -= Time.deltaTime; // Decrement the nextFire timer
         nextMine -= Time.deltaTime; // Decrement the nextMine timer
-        doesHit = SimulateBouncingRay(transform.position, cannon.forward, bulletRicochetMax);
     }
 
     public override void OnEpisodeBegin()
@@ -89,7 +87,7 @@ public class TankAIMachineLearning : Agent
         }
         else
         {
-            timer = 15000;
+            timer = 30000;
         }
         this.transform.SetParent(levels[currentLevel].transform);
         // Create the player tank again
@@ -105,7 +103,7 @@ public class TankAIMachineLearning : Agent
         this.transform.rotation = Quaternion.identity;
         this.transform.localPosition = levels[currentLevel].transform.Find("MLSpawn").transform.localPosition;
 
-        cannon.rotation = Quaternion.Euler(0, 0, -90);
+        cannon.rotation = Quaternion.Euler(0, -90, -90);
         currentCannonRot = cannon.rotation;
         prevTankToTargetDistance = tankToTargetDistance;
         tankToTargetDistance = Vector3.Distance(this.transform.localPosition, otherTank.transform.localPosition);
@@ -118,10 +116,14 @@ public class TankAIMachineLearning : Agent
             sensor.AddObservation(otherTank.transform.localPosition);
             sensor.AddObservation(otherTank.GetComponent<Tank>().vel);
         }
+        else
+        {
+            sensor.AddObservation(levels[currentLevel].transform.Find("AISpawn").transform.localPosition);
+            sensor.AddObservation(Vector3.zero);
+        }
         sensor.AddObservation(this.transform.localPosition);
         sensor.AddObservation(this.vel);
-        sensor.AddObservation(this.cannon.rotation.y);
-        sensor.AddObservation(doesHit);
+        sensor.AddObservation(cannon.localRotation.y);
     }
     public override void Heuristic(in ActionBuffers actionsOut)
     {
@@ -150,22 +152,22 @@ public class TankAIMachineLearning : Agent
         {
             if (collider.gameObject.tag == "Wall" || collider.gameObject.tag == "WallBreakable")
             {
-                AddReward(-0.01f);
+                AddReward(-0.1f);
                 //print("Tank Collided With Wall");
                 break;
             }
         }
-        if (!otherTank)
-        {
-            AddReward(5.0f + 10.0f / bulletsShot);
-            consecutiveWins++;
-            CheckForMoveOn(GetCumulativeReward());
-            EndEpisode();
-        }
-        if (stopwatch.ElapsedMilliseconds > 7000)
+        if (stopwatch.ElapsedMilliseconds > timer)
         {
             CheckForMoveOn(GetCumulativeReward());
             consecutiveWins = 0;
+            EndEpisode();
+        }
+        if (!otherTank)
+        {
+            AddReward(15.0f);
+            consecutiveWins++;
+            CheckForMoveOn(GetCumulativeReward());
             EndEpisode();
         }
     }
@@ -178,13 +180,6 @@ public class TankAIMachineLearning : Agent
 
     private void Move(int horizontal, int forward)
     {
-        // If there is no input on the horizontal or vertical axis set the velocity to 0
-        if (horizontal == 0)
-        {
-            vel = Vector3.zero;
-            return;
-        }
-
         // if horizontal is 1, rotate right
         if (horizontal == 1)
         {
@@ -291,7 +286,7 @@ public class TankAIMachineLearning : Agent
                 }
             }
         }
-        //AddReward(0.001f);
+        //AddReward(-0.1f);
         shotPause = 50;
         currentBullets++;
         // Instantiate the projectile at the position and rotation of this transform with the layer of the tank
@@ -350,39 +345,6 @@ public class TankAIMachineLearning : Agent
         nextMine = mineRate;
     }
 
-    int SimulateBouncingRay(Vector3 origin, Vector3 direction, int remainingBounces)
-    {
-        // Perform a raycast
-        int temp = 0;
-        RaycastHit hit;
-        if (Physics.Raycast(origin, direction, out hit, 500))
-        {
-            if (hit.collider.CompareTag("Bullet") || hit.collider.CompareTag("Mine"))
-                return 0;
-            // Check if the ray hit the player
-            if (hit.collider.CompareTag("Player"))
-                return -1;
-            if (hit.collider.CompareTag("AI"))
-            {
-                // Perform actions when the player is hit by the bouncing ray
-                UnityEngine.Debug.DrawRay(origin, direction * 50, Color.red);
-                return 1;
-            }
-            UnityEngine.Debug.DrawRay(origin, direction * 50, Color.blue);
-            // If the ray hit a wall, calculate the reflection direction
-            Vector3 reflection = Vector3.Reflect(direction, hit.normal);
-
-            // Continue the ray with the reflection direction
-            if (remainingBounces > 0)
-            {
-                temp = SimulateBouncingRay(hit.point, reflection, remainingBounces - 1);
-                if (temp != 0)
-                    return 1 + temp;
-            }
-        }
-        return temp;
-    }
-
     public void RemoveBullet(Vector3 pos)
     {
         //if (Vector3.Distance(pos, otherTank.transform.localPosition) > Vector3.Distance(prevBullLand, otherTank.transform.localPosition)) ;
@@ -423,9 +385,9 @@ public class TankAIMachineLearning : Agent
     private void CheckForMoveOn(float currentReward)
     {
         ResetValues();
-        if (currentReward > 10)
+        if (currentReward >= 10)
         {
-            if (currentLevel < levels.Length - 1 && consecutiveWins >= 5)
+            if (currentLevel < levels.Length - 1 && consecutiveWins >= 10)
             {
                 consecutiveWins = 0;
                 currentLevel++;
