@@ -9,7 +9,6 @@ Every level, every shell ricochet, every clanking tread, and even the mischievou
 
 [![Unity Version](https://img.shields.io/badge/Unity-2022.3%20LTS-blue?logo=unity)](#prerequisites) 
 ![GitHub license](https://img.shields.io/github/license/YOUR‑ORG/wii‑tanks‑unity) 
-![CI Build](https://github.com/YOUR‑ORG/wii‑tanks‑unity/actions/workflows/ci.yml/badge.svg)
 
 ---
 
